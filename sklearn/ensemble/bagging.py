@@ -186,9 +186,8 @@ def _parallel_decision_function(estimators, estimators_features, X):
 
 def _parallel_predict_regression(estimators, estimators_features, X):
     """Private function used to compute predictions within a job."""
-    return sum(estimator.predict(X[:, features])
-               for estimator, features in zip(estimators,
-                                              estimators_features))
+    return [estimator.predict(X[:, features])
+            for estimator, features in zip(estimators, estimators_features)]
 
 
 class BaseBagging(with_metaclass(ABCMeta, BaseEnsemble)):
@@ -288,7 +287,7 @@ class BaseBagging(with_metaclass(ABCMeta, BaseEnsemble)):
         X, y = check_X_y(X, y, ['csr', 'csc'])
 
         # Remap output
-        n_samples, self.n_features_ = X.shape
+        self.n_samples_, self.n_features_ = X.shape
         y = self._validate_y(y)
 
         # Check parameters
@@ -299,9 +298,9 @@ class BaseBagging(with_metaclass(ABCMeta, BaseEnsemble)):
 
         # if max_samples is float:
         if not isinstance(max_samples, (numbers.Integral, np.integer)):
-            max_samples = int(max_samples * X.shape[0])
+            max_samples = int(self.max_samples * self.n_samples_)
 
-        if not (0 < max_samples <= X.shape[0]):
+        if not (0 < max_samples <= self.n_samples_):
             raise ValueError("max_samples must be in (0, n_samples]")
 
         if isinstance(self.max_features, (numbers.Integral, np.integer)):
@@ -889,11 +888,13 @@ class BaggingRegressor(BaseBagging, RegressorMixin):
             random_state=random_state,
             verbose=verbose)
 
-    def predict(self, X):
+    def predict(self, X, return_std=False):
         """Predict regression target for X.
 
         The predicted regression target of an input sample is computed as the
         mean predicted regression targets of the estimators in the ensemble.
+        Optionally, the standard deviation of the predictions of the ensemble's
+        estimators is computed in addition.
 
         Parameters
         ----------
@@ -901,13 +902,20 @@ class BaggingRegressor(BaseBagging, RegressorMixin):
             The training input samples. Sparse matrices are accepted only if
             they are supported by the base estimator.
 
+        return_std : boolean, optional, default=False
+            When True, the sampling standard deviation of the predictions of
+            the ensemble is returned in addition to the predicted values.
+
         Returns
         -------
-        y : array of shape = [n_samples]
-            The predicted values.
+        y_mean : array of shape = [n_samples]
+            The mean of the predicted values.
+
+        y_std : array of shape = [n_samples], optional (if return_std == True)
+            The sampling standard deviation of the predicted values.
         """
+        # Checks
         check_is_fitted(self, "estimators_features_")
-        # Check data
         X = check_array(X, accept_sparse=['csr', 'csc'])
 
         # Parallel loop
@@ -922,9 +930,29 @@ class BaggingRegressor(BaseBagging, RegressorMixin):
             for i in range(n_jobs))
 
         # Reduce
-        y_hat = sum(all_y_hat) / self.n_estimators
+        all_y_hat = np.array(all_y_hat).reshape(self.n_estimators, -1)
+        y_mean = np.mean(all_y_hat, axis=0)
 
-        return y_hat
+        if not return_std:
+            return y_mean
+
+        else:
+            # Infinitesimal jacknife (IJ) estimate of the sampling variance
+
+            # TODO: check correctness
+            # TODO: bias correction (compare with R code)
+
+            var_IJ = np.zeros(len(X))
+            N_bi = np.zeros((self.n_estimators, self.n_samples_))
+
+            for b, samples in enumerate(self.estimators_samples_):
+                N_bi[b, samples] += 1
+
+            var_IJ = np.dot((N_bi - np.mean(N_bi, axis=0)).T,
+                            all_y_hat - y_mean)
+            var_IJ = (var_IJ ** 2).sum(axis=0) / self.n_estimators ** 2
+
+            return y_mean, var_IJ ** 0.5
 
     def _validate_estimator(self):
         """Check the estimator and set the base_estimator_ attribute."""

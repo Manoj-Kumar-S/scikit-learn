@@ -657,11 +657,13 @@ class ForestRegressor(six.with_metaclass(ABCMeta, BaseForest, RegressorMixin)):
             verbose=verbose,
             warm_start=warm_start)
 
-    def predict(self, X):
+    def predict(self, X, return_std=False):
         """Predict regression target for X.
 
         The predicted regression target of an input sample is computed as the
         mean predicted regression targets of the trees in the forest.
+        Optionally, the standard deviation of the predictions of the ensemble's
+        estimators is computed in addition.
 
         Parameters
         ----------
@@ -670,12 +672,19 @@ class ForestRegressor(six.with_metaclass(ABCMeta, BaseForest, RegressorMixin)):
             ``dtype=np.float32`` and if a sparse matrix is provided
             to a sparse ``csr_matrix``.
 
+        return_std : boolean, optional, default=False
+            When True, the sampling standard deviation of the predictions of
+            the ensemble is returned in addition to the predicted values.
+
         Returns
         -------
-        y : array of shape = [n_samples] or [n_samples, n_outputs]
-            The predicted values.
+        y_mean: array of shape = [n_samples] or [n_samples, n_outputs]
+            The mean of the predicted values.
+
+        y_std : array of shape = [n_samples], optional (if return_std == True)
+            The sampling standard deviation of the predicted values.
         """
-        # Check data
+        # Checks
         X = self._validate_X_predict(X)
 
         # Assign chunk of trees to jobs
@@ -687,10 +696,11 @@ class ForestRegressor(six.with_metaclass(ABCMeta, BaseForest, RegressorMixin)):
             delayed(parallel_helper)(e, 'predict', X, check_input=False)
             for e in self.estimators_)
 
-        # Reduce
-        y_hat = sum(all_y_hat) / len(self.estimators_)
-
-        return y_hat
+        y_mean = np.mean(all_y_hat, axis=0)
+        if return_std:
+            return y_mean, np.std(all_y_hat, axis=0)
+        else:
+            return y_mean
 
     def _set_oob_score(self, X, y):
         """Compute out-of-bag scores"""
