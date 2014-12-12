@@ -479,9 +479,11 @@ def enet_path(X, y, l1_ratio=0.5, eps=1e-3, n_alphas=100, alphas=None,
 
     if not multi_output:
         coefs = np.empty((n_features, n_alphas), dtype=np.float64)
+        residual_ = np.empty(n_samples)
     else:
         coefs = np.empty((n_outputs, n_features, n_alphas),
                          dtype=np.float64)
+        residual_ = np.empty((n_samples, n_outputs))
 
     if coef_init is None:
         coef_ = np.asfortranarray(np.zeros(coefs.shape[:-1]))
@@ -494,23 +496,24 @@ def enet_path(X, y, l1_ratio=0.5, eps=1e-3, n_alphas=100, alphas=None,
         if not multi_output and sparse.isspmatrix(X):
             model = cd_fast.sparse_enet_coordinate_descent(
                 coef_, l1_reg, l2_reg, X.data, X.indices,
-                X.indptr, y, X_sparse_scaling,
-                max_iter, tol, rng, random, positive)
+                X.indptr, y, residual_, X_sparse_scaling,
+                max_iter, tol, rng, random, positive, i)
         elif multi_output:
             model = cd_fast.enet_coordinate_descent_multi_task(
-                coef_, l1_reg, l2_reg, X, y, max_iter, tol, rng, random)
+                coef_, l1_reg, l2_reg, X, y, residual_, max_iter, tol, rng,
+                random, i)
         elif isinstance(precompute, np.ndarray):
             model = cd_fast.enet_coordinate_descent_gram(
-                coef_, l1_reg, l2_reg, precompute, Xy, y, max_iter,
-                tol, rng, random, positive)
+                coef_, l1_reg, l2_reg, precompute, Xy, y, residual_, max_iter,
+                tol, rng, random, positive, i)
         elif precompute is False:
             model = cd_fast.enet_coordinate_descent(
-                coef_, l1_reg, l2_reg, X, y, max_iter, tol, rng, random,
-                positive)
+                coef_, l1_reg, l2_reg, X, y, residual_, max_iter, tol, rng, random,
+                positive, i)
         else:
             raise ValueError("Precompute should be one of True, False, "
                              "'auto' or array-like")
-        coef_, dual_gap_, eps_, n_iter_ = model
+        coef_, dual_gap_, eps_, residual_, n_iter_ = model
         coefs[..., i] = coef_
         dual_gaps[i] = dual_gap_
         n_iters.append(n_iter_)
@@ -1677,9 +1680,10 @@ class MultiTaskElasticNet(Lasso):
             raise ValueError("selection should be either random or cyclic.")
         random = (self.selection == 'random')
 
-        self.coef_, self.dual_gap_, self.eps_, self.n_iter_ = \
+        residual_ = np.zeros((n_samples, n_tasks))
+        self.coef_, self.dual_gap_, self.eps_, _, self.n_iter_ = \
             cd_fast.enet_coordinate_descent_multi_task(
-                self.coef_, l1_reg, l2_reg, X, y, self.max_iter, self.tol,
+                self.coef_, l1_reg, l2_reg, X, y, residual_, self.max_iter, self.tol,
                 check_random_state(self.random_state), random)
 
         self._set_intercept(X_mean, y_mean, X_std)

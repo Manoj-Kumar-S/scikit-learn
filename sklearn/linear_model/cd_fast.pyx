@@ -127,8 +127,10 @@ def enet_coordinate_descent(np.ndarray[DOUBLE, ndim=1] w,
                             double alpha, double beta,
                             np.ndarray[DOUBLE, ndim=2] X,
                             np.ndarray[DOUBLE, ndim=1] y,
+                            np.ndarray[DOUBLE, ndim=1] R,
                             int max_iter, double tol,
-                            object rng, bint random=0, bint positive=0):
+                            object rng, bint random=0, bint positive=0,
+                            bint dont_recompute=0):
     """Cython version of the coordinate descent algorithm
         for Elastic-Net regression
 
@@ -149,10 +151,6 @@ def enet_coordinate_descent(np.ndarray[DOUBLE, ndim=1] w,
 
     # compute norms of the columns of X
     cdef np.ndarray[DOUBLE, ndim=1] norm_cols_X = (X**2).sum(axis=0)
-
-    # initial value of the residuals
-    cdef np.ndarray[DOUBLE, ndim=1] R = np.empty(n_samples)
-
     cdef np.ndarray[DOUBLE, ndim=1] XtA = np.empty(n_features)
     cdef double tmp
     cdef double w_ii
@@ -179,10 +177,11 @@ def enet_coordinate_descent(np.ndarray[DOUBLE, ndim=1] w,
     with nogil:
 
         # R = y - np.dot(X, w)
-        for i in range(n_samples):
-            R[i] = y[i] - ddot(n_features,
-                               <DOUBLE*>(X.data + i * sizeof(DOUBLE)),
-                               n_samples, <DOUBLE*>w.data, 1)
+        if dont_recompute == 0:
+            for i in range(n_samples):
+                R[i] = y[i] - ddot(n_features,
+                                   <DOUBLE*>(X.data + i * sizeof(DOUBLE)),
+                                   n_samples, <DOUBLE*>w.data, 1)
 
         # tol *= np.dot(y, y)
         tol *= ddot(n_samples, <DOUBLE*>y.data, n_tasks,
@@ -281,7 +280,7 @@ def enet_coordinate_descent(np.ndarray[DOUBLE, ndim=1] w,
                     # return if we reached desired tolerance
                     break
 
-    return w, gap, tol, n_iter + 1
+    return w, gap, tol, R, n_iter + 1
 
 
 @cython.boundscheck(False)
@@ -291,9 +290,10 @@ def sparse_enet_coordinate_descent(double[:] w,
                             double alpha, double beta,
                             double[:] X_data, int[:] X_indices,
                             int[:] X_indptr, double[:] y,
+                            double[:] R,
                             double[:] X_mean, int max_iter,
                             double tol, object rng, bint random=0,
-                            bint positive=0):
+                            bint positive=0, bint dont_recompute=0):
     """Cython version of the coordinate descent algorithm for Elastic-Net
 
     We minimize:
@@ -318,8 +318,10 @@ def sparse_enet_coordinate_descent(double[:] w,
     # get the number of tasks indirectly, using strides
     cdef unsigned int n_tasks = y.strides[0] / sizeof(DOUBLE)
 
-    # initial value of the residuals
-    cdef double[:] R = y.copy()
+    if dont_recompute == 0:
+        # initial value of the residuals
+        for i in range(n_samples):
+            R[i] = y[i]
 
     cdef double[:] X_T_R = np.zeros(n_features)
     cdef double[:] XtA = np.zeros(n_features)
@@ -356,11 +358,14 @@ def sparse_enet_coordinate_descent(double[:] w,
 
             for jj in range(startptr, endptr):
                 normalize_sum += (X_data[jj] - X_mean_ii) ** 2
-                R[X_indices[jj]] -= X_data[jj] * w_ii
+
+                if dont_recompute == 0:
+                    R[X_indices[jj]] -= X_data[jj] * w_ii
+
             norm_cols_X[ii] = normalize_sum + \
                 (n_samples - endptr + startptr) * X_mean_ii ** 2
 
-            if center:
+            if center and dont_recompute == 0:
                 for jj in range(n_samples):
                     R[jj] += X_mean_ii * w_ii
             startptr = endptr
@@ -476,7 +481,7 @@ def sparse_enet_coordinate_descent(double[:] w,
                     # return if we reached desired tolerance
                     break
 
-    return w, gap, tol, n_iter + 1
+    return w, gap, tol, R, n_iter + 1
 
 
 @cython.boundscheck(False)
@@ -484,8 +489,9 @@ def sparse_enet_coordinate_descent(double[:] w,
 @cython.cdivision(True)
 def enet_coordinate_descent_gram(double[:] w, double alpha, double beta,
                                  double[:, :] Q, double[:] q, double[:] y,
-                                 int max_iter, double tol, object rng,
-                                 bint random=0, bint positive=0):
+                                 double[:] H, int max_iter, double tol, object rng,
+                                 bint random=0, bint positive=0,
+                                 bint dont_recompute=0):
     """Cython version of the coordinate descent algorithm
         for Elastic-Net regression
 
@@ -505,8 +511,9 @@ def enet_coordinate_descent_gram(double[:] w, double alpha, double beta,
     cdef unsigned int n_features = Q.shape[0]
     cdef unsigned int n_tasks = y.strides[0] / sizeof(DOUBLE)
 
-    # initial value "Q w" which will be kept of up to date in the iterations
-    cdef double[:] H = np.dot(Q, w)
+    if dont_recompute == 0:
+        print "here"
+        H = np.dot(Q, w)
 
     cdef double[:] XtA = np.zeros(n_features)
     cdef double tmp
@@ -617,7 +624,7 @@ def enet_coordinate_descent_gram(double[:] w, double alpha, double beta,
                     # return if we reached desired tolerance
                     break
 
-    return np.asarray(w), gap, tol, n_iter + 1
+    return np.asarray(w), gap, tol, H, n_iter + 1
 
 
 @cython.boundscheck(False)
@@ -625,9 +632,9 @@ def enet_coordinate_descent_gram(double[:] w, double alpha, double beta,
 @cython.cdivision(True)
 def enet_coordinate_descent_multi_task(double[::1, :] W, double l1_reg,
                                        double l2_reg, double[::1, :] X,
-                                       double[:, :] Y, int max_iter,
+                                       double[:, :] Y, double[:, :] R, int max_iter,
                                        double tol, object rng,
-                                       bint random=0):
+                                       bint random=0, bint dont_recompute=0):
     """Cython version of the coordinate descent algorithm
         for Elastic-Net mult-task regression
 
@@ -647,9 +654,6 @@ def enet_coordinate_descent_multi_task(double[::1, :] W, double l1_reg,
     cdef double[:, ::1] XtA = np.zeros((n_features, n_tasks))
     cdef double XtA_axis1norm
     cdef double dual_norm_XtA
-
-    # initial value of the residuals
-    cdef double[:, ::1] R = np.zeros((n_samples, n_tasks))
 
     cdef double[:] norm_cols_X = np.zeros(n_features)
     cdef double[::1] tmp = np.zeros(n_tasks, dtype=np.float)
@@ -685,12 +689,13 @@ def enet_coordinate_descent_multi_task(double[::1, :] W, double l1_reg,
             for jj in range(n_samples):
                 norm_cols_X[ii] += X[jj, ii] ** 2
 
-        # R = Y - np.dot(X, W.T)
-        for ii in range(n_samples):
-            for jj in range(n_tasks):
-                R[ii, jj] = Y[ii, jj] - (
-                    ddot(n_features, X_ptr + ii, n_samples, W_ptr + jj, n_tasks)
-                    )
+        if dont_recompute == 0:
+            # R = Y - np.dot(X, W.T)
+            for ii in range(n_samples):
+                for jj in range(n_tasks):
+                    R[ii, jj] = Y[ii, jj] - (
+                        ddot(n_features, X_ptr + ii, n_samples, W_ptr + jj, n_tasks)
+                        )
 
         # tol = tol * linalg.norm(Y, ord='fro') ** 2
         tol = tol * dnrm2(n_samples * n_tasks, Y_ptr, 1) ** 2
@@ -800,4 +805,4 @@ def enet_coordinate_descent_multi_task(double[::1, :] W, double l1_reg,
                     # return if we reached desired tolerance
                     break
 
-    return np.asarray(W), gap, tol, n_iter + 1
+    return np.asarray(W), gap, tol, R, n_iter + 1
