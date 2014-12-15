@@ -26,30 +26,6 @@ from .pairwise_fast import _chi2_kernel_fast, _sparse_manhattan
 
 
 # Utility Functions
-def _return_float_dtype(X, Y):
-    """
-    1. If dtype of X and Y is float32, then dtype float32 is returned.
-    2. Else dtype float is returned.
-    """
-    if not issparse(X) and not isinstance(X, np.ndarray):
-        X = np.asarray(X)
-
-    if Y is None:
-        Y_dtype = X.dtype
-    elif not issparse(Y) and not isinstance(Y, np.ndarray):
-        Y = np.asarray(Y)
-        Y_dtype = Y.dtype
-    else:
-        Y_dtype = Y.dtype
-
-    if X.dtype == Y_dtype == np.float32:
-        dtype = np.float32
-    else:
-        dtype = np.float
-
-    return X, Y, dtype
-
-
 def check_pairwise_arrays(X, Y):
     """ Set X and Y appropriately and checks inputs
 
@@ -79,18 +55,22 @@ def check_pairwise_arrays(X, Y):
         If Y was None, safe_Y will be a pointer to X.
 
     """
-    X, Y, dtype = _return_float_dtype(X, Y)
-
     if Y is X or Y is None:
-        X = Y = check_array(X, accept_sparse='csr', dtype=dtype)
+        X = Y = check_array(X, accept_sparse='csr')
     else:
-        X = check_array(X, accept_sparse='csr', dtype=dtype)
-        Y = check_array(Y, accept_sparse='csr', dtype=dtype)
+        X = check_array(X, accept_sparse='csr')
+        Y = check_array(Y, accept_sparse='csr')
     if X.shape[1] != Y.shape[1]:
         raise ValueError("Incompatible dimension for X and Y matrices: "
                          "X.shape[1] == %d while Y.shape[1] == %d" % (
                              X.shape[1], Y.shape[1]))
 
+    if not (X.dtype == Y.dtype == np.float32):
+        if Y is X:
+            X = Y = check_array(X, ['csr', 'csc', 'coo'], dtype=np.float)
+        else:
+            X = check_array(X, ['csr', 'csc', 'coo'], dtype=np.float)
+            Y = check_array(Y, ['csr', 'csc', 'coo'], dtype=np.float)
     return X, Y
 
 
@@ -215,8 +195,7 @@ def euclidean_distances(X, Y=None, Y_norm_squared=None, squared=False):
 
 
 def pairwise_distances_argmin_min(X, Y, axis=1, metric="euclidean",
-                                  batch_size=500, metric_kwargs=None,
-                                  check_X_y=True):
+                                  batch_size=500, metric_kwargs=None):
     """Compute minimum distances between one point and a set of points.
 
     This function computes for each row in X, the index of the row of Y which
@@ -271,10 +250,6 @@ def pairwise_distances_argmin_min(X, Y, axis=1, metric="euclidean",
     metric_kwargs : dict, optional
         Keyword arguments to pass to specified metric function.
 
-    check_X_y : bool, default True
-        Whether or not to check X and y for shape, validity and dtype. Speed
-        improvements possible if set to False when called repeatedly.
-
     Returns
     -------
     argmin : numpy.ndarray
@@ -295,8 +270,7 @@ def pairwise_distances_argmin_min(X, Y, axis=1, metric="euclidean",
     elif not callable(metric) and not isinstance(metric, str):
         raise ValueError("'metric' must be a string or a callable")
 
-    if check_X_y:
-        X, Y = check_pairwise_arrays(X, Y)
+    X, Y = check_pairwise_arrays(X, Y)
 
     if metric_kwargs is None:
         metric_kwargs = {}
