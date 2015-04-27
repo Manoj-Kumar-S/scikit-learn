@@ -53,6 +53,21 @@ def test_kmeans_dtype():
     assert_array_equal(km.labels_, pred_x)
 
 
+def test_elkan_results():
+    rnd = np.random.RandomState(0)
+    X_normal = rnd.normal(size=(50, 10))
+    X_blobs, _ = make_blobs(random_state=0)
+    km_lloyd = KMeans(algorithm='lloyd', n_clusters=5, random_state=0,
+                      n_init=1)
+    km_elkan = KMeans(algorithm='elkan', n_clusters=5, random_state=0,
+                      n_init=1)
+    for X in [X_normal, X_blobs]:
+        km_lloyd.fit(X)
+        km_elkan.fit(X)
+        assert_array_almost_equal(km_elkan.cluster_centers_, km_lloyd.cluster_centers_)
+        assert_array_equal(km_elkan.labels_, km_lloyd.labels_)
+
+
 def test_labels_assignment_and_inertia():
     # pure numpy implementation as easily auditable reference gold
     # implementation
@@ -565,9 +580,18 @@ def test_predict():
 
 
 def test_score():
+
     km1 = KMeans(n_clusters=n_clusters, max_iter=1, random_state=42, n_init=1)
     s1 = km1.fit(X).score(X)
     km2 = KMeans(n_clusters=n_clusters, max_iter=10, random_state=42, n_init=1)
+    s2 = km2.fit(X).score(X)
+    assert_greater(s2, s1)
+
+    km1 = KMeans(n_clusters=n_clusters, max_iter=1, random_state=42, n_init=1,
+                 algorithm='elkan')
+    s1 = km1.fit(X).score(X)
+    km2 = KMeans(n_clusters=n_clusters, max_iter=10, random_state=42, n_init=1,
+                 algorithm='elkan')
     s2 = km2.fit(X).score(X)
     assert_greater(s2, s1)
 
