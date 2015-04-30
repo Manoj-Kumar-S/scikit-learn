@@ -71,6 +71,12 @@ Bug fixes
       If `n_iter<2` numerical issues are unlikely, thus no normalization is applied.
       Other normalization options are available: 'none', 'LU' and 'QR'. (`#5141 <https://github.com/scikit-learn/scikit-learn/pull/5141>`_) by `Giorgio Patrini`_.
 
+=======
+Enhancements
+............
+
+Bug fixes
+.........
     - Fixed bug in :func:`manifold.spectral_embedding` where diagonal of unnormalized
       Laplacian matrix was incorrectly set to 1. By `Peter Fischer`_.
 
@@ -91,6 +97,7 @@ API changes summary
      the :mod:`model_selection` module.
      (`#4294 <https://github.com/scikit-learn/scikit-learn/pull/4294>`_) by `Raghav R V`_.
 
+=======
 
 .. _changes_0_17:
 
@@ -336,6 +343,9 @@ Enhancements
    - Added the ``fit_predict`` method to :class:`pipeline.Pipeline`.
 
    - Added the :func:`preprocessing.min_max_scale` function.
+
+   - Added ``algorithm="elkan"`` to :class:`cluster.KMeans` implementing
+     Elkan's fast K-Means algorithm. By `Andreas Müller`_.
 
 Bug fixes
 .........
