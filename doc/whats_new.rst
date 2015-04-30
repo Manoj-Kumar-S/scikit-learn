@@ -22,6 +22,7 @@ New features
      sampling of functions from GP prior and GP posterior. Extensive documentation and
      examples are provided. By `Jan Hendrik Metzen`_.
 
+<<<<<<< HEAD
    - Added the :class:`ensemble.IsolationForest` class for anomaly detection based on
      random forests. By `Nicolas Goix`_.
 
@@ -67,6 +68,12 @@ Bug fixes
       If `n_iter<2` numerical issues are unlikely, thus no normalization is applied.
       Other normalization options are available: 'none', 'LU' and 'QR'. (`#5141 https://github.com/scikit-learn/scikit-learn/pull/5141>`_) by `Giorgio Patrini`_.
 
+=======
+Enhancements
+............
+
+Bug fixes
+.........
     - Fixed bug in :func:`manifold.spectral_embedding` where diagonal of unnormalized
       Laplacian matrix was incorrectly set to 1. By `Peter Fischer`_.
 
@@ -87,6 +94,7 @@ API changes summary
      the :mod:`model_selection` module.
      (`#4294 https://github.com/scikit-learn/scikit-learn/pull/4294>`_) by `Raghav R V`_.
 
+=======
 
 .. _changes_0_17:
 
@@ -198,6 +206,7 @@ Enhancements
      option, which has a simpler forumlar and interpretation.
      By Hanna Wallach and `Andreas Müller`_.
 
+<<<<<<< HEAD
    - Add ``class_weight`` parameter to automatically weight samples by class
      frequency for :class:`linear_model.PassiveAgressiveClassifier`. By
      `Trevor Stephens`_.
@@ -310,6 +319,10 @@ Enhancements
      `Maheshakya Wijewardena`_, `Joel Nothman`_ and `Manoj Kumar`_.
 
    - Added :func:`metrics.pairwise.laplacian_kernel`.  By `Clyde Fare <https://github.com/Clyde-fare>`_.
+
+   - Added ``algorithm="elkan"`` to :class:`cluster.KMeans` implementing
+     Elkan's fast K-Means algorithm. By `Andreas Müller`_.
+
 
 Bug fixes
 .........
