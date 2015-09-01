@@ -419,7 +419,7 @@ def logistic_regression_path(X, y, pos_class=None, Cs=10, fit_intercept=True,
                              solver='lbfgs', coef=None, copy=True,
                              class_weight=None, dual=False, penalty='l2',
                              intercept_scaling=1., multi_class='ovr',
-                             random_state=None):
+                             random_state=None, sample_weight=None):
     """Compute a Logistic Regression model for a list of regularization
     parameters.
 
@@ -515,6 +515,10 @@ def logistic_regression_path(X, y, pos_class=None, Cs=10, fit_intercept=True,
         The seed of the pseudo random number generator to use when
         shuffling the data.
 
+    sample_weight: array-like, shape (n_samples,)
+        Weights assigned to each samples, where sample_weight[i] is the weight
+        assigned to X[i]
+
     Returns
     -------
     coefs : ndarray, shape (n_cs, n_features) or (n_cs, n_features + 1)
@@ -552,7 +556,11 @@ def logistic_regression_path(X, y, pos_class=None, Cs=10, fit_intercept=True,
     # If class_weights is a dict (provided by the user), the weights
     # are assigned to the original labels. If it is "auto", then
     # the class_weights are assigned after masking the labels with a OvR.
-    sample_weight = np.ones(X.shape[0])
+    if sample_weight is None:
+        sample_weight = np.ones(X.shape[0])
+    else:
+        sample_weight = np.array(sample_weight)
+    check_consistent_length(X, sample_weight)
     le = LabelEncoder()
 
     if isinstance(class_weight, dict):
@@ -570,7 +578,7 @@ def logistic_regression_path(X, y, pos_class=None, Cs=10, fit_intercept=True,
                                  "class_weight='auto'")
         else:
             class_weight_ = compute_class_weight(class_weight, classes, y)
-            sample_weight = class_weight_[le.fit_transform(y)]
+            sample_weight *= class_weight_[le.fit_transform(y)]
 
     # For doing a ovr, we need to mask the labels first. for the
     # multinomial case this is not necessary.
@@ -595,7 +603,7 @@ def logistic_regression_path(X, y, pos_class=None, Cs=10, fit_intercept=True,
 
     if class_weight == "auto":
         class_weight_ = compute_class_weight(class_weight, mask_classes, y)
-        sample_weight = class_weight_[le.fit_transform(y)]
+        sample_weight *= class_weight_[le.fit_transform(y)]
 
     if coef is not None:
         # it must work both giving the bias term and not
@@ -690,7 +698,7 @@ def _log_reg_scoring_path(X, y, train, test, pos_class=None, Cs=10,
                           max_iter=100, tol=1e-4, class_weight=None,
                           verbose=0, solver='lbfgs', penalty='l2',
                           dual=False, copy=True, intercept_scaling=1.,
-                          multi_class='ovr'):
+                          multi_class='ovr', sample_weight=None):
     """Computes scores across logistic_regression_path
 
     Parameters
@@ -828,7 +836,8 @@ def _log_reg_scoring_path(X, y, train, test, pos_class=None, Cs=10,
                                          multi_class=multi_class,
                                          tol=tol, verbose=verbose,
                                          dual=dual, penalty=penalty,
-                                         intercept_scaling=intercept_scaling)
+                                         intercept_scaling=intercept_scaling,
+                                         sample_weight=sample_weight)
 
     scores = list()
 
@@ -1003,7 +1012,7 @@ class LogisticRegression(BaseEstimator, LinearClassifierMixin,
         self.multi_class = multi_class
         self.verbose = verbose
 
-    def fit(self, X, y):
+    def fit(self, X, y, sample_weight=None):
         """Fit the model according to the given training data.
 
         Parameters
@@ -1014,6 +1023,9 @@ class LogisticRegression(BaseEstimator, LinearClassifierMixin,
 
         y : array-like, shape (n_samples,)
             Target vector relative to X.
+
+        sample_weight: array-like, (n_samples,)
+            Sample_weight[i] is the weight assigned to X[i].
 
         Returns
         -------
@@ -1067,7 +1079,7 @@ class LogisticRegression(BaseEstimator, LinearClassifierMixin,
                 fit_intercept=self.fit_intercept, tol=self.tol,
                 verbose=self.verbose, solver=self.solver,
                 multi_class=self.multi_class, max_iter=self.max_iter,
-                class_weight=self.class_weight)
+                class_weight=self.class_weight, sample_weight=sample_weight)
             self.coef_.append(coef_[0])
 
         self.coef_ = np.squeeze(self.coef_)
@@ -1304,7 +1316,7 @@ class LogisticRegressionCV(LogisticRegression, BaseEstimator,
         self.intercept_scaling = intercept_scaling
         self.multi_class = multi_class
 
-    def fit(self, X, y):
+    def fit(self, X, y, sample_weight=None):
         """Fit the model according to the given training data.
 
         Parameters
@@ -1315,6 +1327,9 @@ class LogisticRegressionCV(LogisticRegression, BaseEstimator,
 
         y : array-like, shape (n_samples,)
             Target vector relative to X.
+
+        sample_weight: array-like, (n_samples,)
+            Sample_weight[i] is the weight assigned to X[i].
 
         Returns
         -------
@@ -1384,7 +1399,8 @@ class LogisticRegressionCV(LogisticRegression, BaseEstimator,
                       max_iter=self.max_iter, verbose=self.verbose,
                       class_weight=self.class_weight, scoring=self.scoring,
                       multi_class=self.multi_class,
-                      intercept_scaling=self.intercept_scaling
+                      intercept_scaling=self.intercept_scaling,
+                      sample_weight=sample_weight
                       )
             for label in iter_labels
             for train, test in folds)
@@ -1448,7 +1464,8 @@ class LogisticRegressionCV(LogisticRegression, BaseEstimator,
                     penalty=self.penalty,
                     class_weight=self.class_weight,
                     multi_class=self.multi_class,
-                    verbose=max(0, self.verbose - 1))
+                    verbose=max(0, self.verbose - 1),
+                    sample_weight=sample_weight)
                 w = w[0]
 
             else:
