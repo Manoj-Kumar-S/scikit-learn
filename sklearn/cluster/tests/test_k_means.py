@@ -29,6 +29,7 @@ from sklearn.cluster.k_means_ import _mini_batch_step
 from sklearn.datasets.samples_generator import make_blobs
 from sklearn.externals.six.moves import cStringIO as StringIO
 from sklearn.exceptions import DataConversionWarning
+from sklearn.metrics.cluster import homogeneity_score
 
 
 # non centered, sparse centers to check the
@@ -696,6 +697,17 @@ def test_predict_equal_labels():
                 algorithm='triangle_inequality')
     km.fit(X)
     assert_array_equal(km.predict(X), km.labels_)
+
+
+def test_full_vs_triangle():
+
+    km1 = KMeans(algorithm='full')
+    km2 = KMeans(algorithm='triangle_inequality')
+
+    km1.fit(X)
+    km2.fit(X)
+
+    homogeneity_score(km1.predict(X), km2.predict(X)) == 1.0
 
 
 def test_n_init():
