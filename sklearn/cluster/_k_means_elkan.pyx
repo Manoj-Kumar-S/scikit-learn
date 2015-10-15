@@ -17,7 +17,7 @@ from ._k_means import _centers_dense
 
 
 cdef double *getfloatpointer(np.ndarray[np.float64_t, ndim=2, mode='c'] data):
-    return <double *>(data.data) 
+    return <double *>(data.data)
 
 
 cdef double d(double* a, double* b, int n_features) nogil:
@@ -75,13 +75,13 @@ def k_means_elkan(X_, int n_clusters, init, float tol=1e-4, int max_iter=30, ver
 
     tol : float, default=1e-4
         The relative increment in cluster means before declaring convergence.
-    
+
     max_iter : int, default=30
         Maximum number of passes over the dataset.
 
     verbose : bool, default=False
         Whether to be verbose.
-        
+
     """
     #initialize
     centers_ = init
@@ -104,6 +104,11 @@ def k_means_elkan(X_, int n_clusters, init, float tol=1e-4, int max_iter=30, ver
                                     n_features, n_clusters)
     cdef np.uint8_t[:] bounds_tight = np.ones(n_samples, dtype=np.uint8)
     cdef np.uint8_t[:] points_to_update = np.zeros(n_samples, dtype=np.uint8)
+
+    if max_iter <= 0:
+        raise ValueError('Number of iterations should be a positive number'
+        ', got %d instead' % max_iter)
+
     for iteration in range(max_iter):
         if verbose:
             print("start iteration")
@@ -164,4 +169,8 @@ def k_means_elkan(X_, int n_clusters, init, float tol=1e-4, int max_iter=30, ver
                 print("center shift %e within tolerance %e"
                       % (center_shift_total, tol))
             break
+    if center_shift_total > 0:
+        update_labels_distances_inplace(X_p, centers_p, center_distances,
+                                        labels, lower_bounds, upper_bounds,
+                                        n_samples, n_features, n_clusters)
     return centers_, labels_, iteration
