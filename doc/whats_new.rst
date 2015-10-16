@@ -206,7 +206,6 @@ Enhancements
      option, which has a simpler forumlar and interpretation.
      By Hanna Wallach and `Andreas Müller`_.
 
-<<<<<<< HEAD
    - Add ``class_weight`` parameter to automatically weight samples by class
      frequency for :class:`linear_model.PassiveAgressiveClassifier`. By
      `Trevor Stephens`_.
