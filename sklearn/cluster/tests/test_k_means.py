@@ -54,18 +54,18 @@ def test_kmeans_dtype():
     assert_array_equal(km.labels_, pred_x)
 
 
-def test_triangle_results():
+def test_elkan_results():
     rnd = np.random.RandomState(0)
     X_normal = rnd.normal(size=(50, 10))
     X_blobs, _ = make_blobs(random_state=0)
     km_full = KMeans(algorithm='full', n_clusters=5, random_state=0, n_init=1)
-    km_triangle_inequality = KMeans(algorithm='triangle_inequality',
-                                    n_clusters=5, random_state=0, n_init=1)
+    km_elkan = KMeans(algorithm='elkan', n_clusters=5,
+                      random_state=0, n_init=1)
     for X in [X_normal, X_blobs]:
         km_full.fit(X)
-        km_triangle_inequality.fit(X)
-        assert_array_almost_equal(km_triangle_inequality.cluster_centers_, km_full.cluster_centers_)
-        assert_array_equal(km_triangle_inequality.labels_, km_full.labels_)
+        km_elkan.fit(X)
+        assert_array_almost_equal(km_elkan.cluster_centers_, km_full.cluster_centers_)
+        assert_array_equal(km_elkan.labels_, km_full.labels_)
 
 
 def test_labels_assignment_and_inertia():
@@ -694,15 +694,15 @@ def test_predict_equal_labels():
     assert_array_equal(km.predict(X), km.labels_)
 
     km = KMeans(random_state=13, n_jobs=1, n_init=1, max_iter=1,
-                algorithm='triangle_inequality')
+                algorithm='elkan')
     km.fit(X)
     assert_array_equal(km.predict(X), km.labels_)
 
 
-def test_full_vs_triangle():
+def test_full_vs_elkan():
 
     km1 = KMeans(algorithm='full')
-    km2 = KMeans(algorithm='triangle_inequality')
+    km2 = KMeans(algorithm='elkan')
 
     km1.fit(X)
     km2.fit(X)
