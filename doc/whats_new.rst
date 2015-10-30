@@ -22,7 +22,6 @@ New features
      sampling of functions from GP prior and GP posterior. Extensive documentation and
      examples are provided. By `Jan Hendrik Metzen`_.
 
-<<<<<<< HEAD
    - Added the :class:`ensemble.IsolationForest` class for anomaly detection based on
      random forests. By `Nicolas Goix`_.
 
@@ -68,7 +67,6 @@ Bug fixes
       If `n_iter<2` numerical issues are unlikely, thus no normalization is applied.
       Other normalization options are available: 'none', 'LU' and 'QR'. (`#5141 https://github.com/scikit-learn/scikit-learn/pull/5141>`_) by `Giorgio Patrini`_.
 
-=======
 Enhancements
 ............
 
