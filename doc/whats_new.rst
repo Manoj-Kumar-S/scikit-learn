@@ -71,7 +71,6 @@ Bug fixes
       If `n_iter<2` numerical issues are unlikely, thus no normalization is applied.
       Other normalization options are available: 'none', 'LU' and 'QR'. (`#5141 <https://github.com/scikit-learn/scikit-learn/pull/5141>`_) by `Giorgio Patrini`_.
 
-=======
 Enhancements
 ............
 
