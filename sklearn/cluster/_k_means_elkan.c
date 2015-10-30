@@ -1472,7 +1472,7 @@ static PyObject *indirect = 0;
 static PyObject *contiguous = 0;
 static PyObject *indirect_contiguous = 0;
 static double *__pyx_f_7sklearn_7cluster_14_k_means_elkan_getfloatpointer(PyArrayObject *); /*proto*/
-static double __pyx_f_7sklearn_7cluster_14_k_means_elkan_d(double *, double *, int); /*proto*/
+static double __pyx_f_7sklearn_7cluster_14_k_means_elkan_euclidian_dist(double *, double *, int); /*proto*/
 static PyObject *__pyx_f_7sklearn_7cluster_14_k_means_elkan_update_labels_distances_inplace(double *, double *, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, int, int, int); /*proto*/
 static struct __pyx_array_obj *__pyx_array_new(PyObject *, Py_ssize_t, char *, char *, char *); /*proto*/
 static void *__pyx_align_pointer(void *, size_t); /*proto*/
@@ -1931,21 +1931,21 @@ static double *__pyx_f_7sklearn_7cluster_14_k_means_elkan_getfloatpointer(PyArra
 /* "sklearn/cluster/_k_means_elkan.pyx":23
  * 
  * 
- * cdef double d(double* a, double* b, int n_features) nogil:             # <<<<<<<<<<<<<<
+ * cdef double euclidian_dist(double* a, double* b, int n_features) nogil:             # <<<<<<<<<<<<<<
  *     cdef double result, tmp
  *     result = 0
  */
 
-static double __pyx_f_7sklearn_7cluster_14_k_means_elkan_d(double *__pyx_v_a, double *__pyx_v_b, int __pyx_v_n_features) {
+static double __pyx_f_7sklearn_7cluster_14_k_means_elkan_euclidian_dist(double *__pyx_v_a, double *__pyx_v_b, int __pyx_v_n_features) {
   double __pyx_v_result;
   double __pyx_v_tmp;
-  CYTHON_UNUSED int __pyx_v_i;
+  int __pyx_v_i;
   double __pyx_r;
   int __pyx_t_1;
   int __pyx_t_2;
 
   /* "sklearn/cluster/_k_means_elkan.pyx":25
- * cdef double d(double* a, double* b, int n_features) nogil:
+ * cdef double euclidian_dist(double* a, double* b, int n_features) nogil:
  *     cdef double result, tmp
  *     result = 0             # <<<<<<<<<<<<<<
  *     cdef int i
@@ -1957,8 +1957,8 @@ static double __pyx_f_7sklearn_7cluster_14_k_means_elkan_d(double *__pyx_v_a, do
  *     result = 0
  *     cdef int i
  *     for i in range(n_features):             # <<<<<<<<<<<<<<
- *         tmp = (a[0] - b[0])
- *         a += 1
+ *         tmp = (a[i] - b[i])
+ *         result += tmp * tmp
  */
   __pyx_t_1 = __pyx_v_n_features;
   for (__pyx_t_2 = 0; __pyx_t_2 < __pyx_t_1; __pyx_t_2+=1) {
@@ -1967,33 +1967,15 @@ static double __pyx_f_7sklearn_7cluster_14_k_means_elkan_d(double *__pyx_v_a, do
     /* "sklearn/cluster/_k_means_elkan.pyx":28
  *     cdef int i
  *     for i in range(n_features):
- *         tmp = (a[0] - b[0])             # <<<<<<<<<<<<<<
- *         a += 1
- *         b += 1
- */
-    __pyx_v_tmp = ((__pyx_v_a[0]) - (__pyx_v_b[0]));
-
-    /* "sklearn/cluster/_k_means_elkan.pyx":29
- *     for i in range(n_features):
- *         tmp = (a[0] - b[0])
- *         a += 1             # <<<<<<<<<<<<<<
- *         b += 1
- *         result += tmp * tmp
- */
-    __pyx_v_a = (__pyx_v_a + 1);
-
-    /* "sklearn/cluster/_k_means_elkan.pyx":30
- *         tmp = (a[0] - b[0])
- *         a += 1
- *         b += 1             # <<<<<<<<<<<<<<
+ *         tmp = (a[i] - b[i])             # <<<<<<<<<<<<<<
  *         result += tmp * tmp
  *     return sqrt(result)
  */
-    __pyx_v_b = (__pyx_v_b + 1);
+    __pyx_v_tmp = ((__pyx_v_a[__pyx_v_i]) - (__pyx_v_b[__pyx_v_i]));
 
-    /* "sklearn/cluster/_k_means_elkan.pyx":31
- *         a += 1
- *         b += 1
+    /* "sklearn/cluster/_k_means_elkan.pyx":29
+ *     for i in range(n_features):
+ *         tmp = (a[i] - b[i])
  *         result += tmp * tmp             # <<<<<<<<<<<<<<
  *     return sqrt(result)
  * 
@@ -2001,8 +1983,8 @@ static double __pyx_f_7sklearn_7cluster_14_k_means_elkan_d(double *__pyx_v_a, do
     __pyx_v_result = (__pyx_v_result + (__pyx_v_tmp * __pyx_v_tmp));
   }
 
-  /* "sklearn/cluster/_k_means_elkan.pyx":32
- *         b += 1
+  /* "sklearn/cluster/_k_means_elkan.pyx":30
+ *         tmp = (a[i] - b[i])
  *         result += tmp * tmp
  *     return sqrt(result)             # <<<<<<<<<<<<<<
  * 
@@ -2014,7 +1996,7 @@ static double __pyx_f_7sklearn_7cluster_14_k_means_elkan_d(double *__pyx_v_a, do
   /* "sklearn/cluster/_k_means_elkan.pyx":23
  * 
  * 
- * cdef double d(double* a, double* b, int n_features) nogil:             # <<<<<<<<<<<<<<
+ * cdef double euclidian_dist(double* a, double* b, int n_features) nogil:             # <<<<<<<<<<<<<<
  *     cdef double result, tmp
  *     result = 0
  */
@@ -2024,15 +2006,15 @@ static double __pyx_f_7sklearn_7cluster_14_k_means_elkan_d(double *__pyx_v_a, do
   return __pyx_r;
 }
 
-/* "sklearn/cluster/_k_means_elkan.pyx":35
+/* "sklearn/cluster/_k_means_elkan.pyx":33
  * 
  * 
  * cdef update_labels_distances_inplace(             # <<<<<<<<<<<<<<
  *         double* X, double* centers, double[:, :] center_distances, int[:] labels,
- *         double[:, :] lower_bounds, double[:] distances, int n_samples, int
+ *         double[:, :] lower_bounds, double[:] upper_bounds, int n_samples, int
  */
 
-static PyObject *__pyx_f_7sklearn_7cluster_14_k_means_elkan_update_labels_distances_inplace(double *__pyx_v_X, double *__pyx_v_centers, __Pyx_memviewslice __pyx_v_center_distances, __Pyx_memviewslice __pyx_v_labels, __Pyx_memviewslice __pyx_v_lower_bounds, __Pyx_memviewslice __pyx_v_distances, int __pyx_v_n_samples, int __pyx_v_n_features, int __pyx_v_n_clusters) {
+static PyObject *__pyx_f_7sklearn_7cluster_14_k_means_elkan_update_labels_distances_inplace(double *__pyx_v_X, double *__pyx_v_centers, __Pyx_memviewslice __pyx_v_center_distances, __Pyx_memviewslice __pyx_v_labels, __Pyx_memviewslice __pyx_v_lower_bounds, __Pyx_memviewslice __pyx_v_upper_bounds, int __pyx_v_n_samples, int __pyx_v_n_features, int __pyx_v_n_clusters) {
   double *__pyx_v_x;
   double *__pyx_v_c;
   double __pyx_v_d_c;
@@ -2055,7 +2037,7 @@ static PyObject *__pyx_f_7sklearn_7cluster_14_k_means_elkan_update_labels_distan
   int __pyx_t_11;
   __Pyx_RefNannySetupContext("update_labels_distances_inplace", 0);
 
-  /* "sklearn/cluster/_k_means_elkan.pyx":45
+  /* "sklearn/cluster/_k_means_elkan.pyx":43
  *     cdef double d_c, dist
  *     cdef int c_x, j, sample
  *     for sample in range(n_samples):             # <<<<<<<<<<<<<<
@@ -2066,88 +2048,88 @@ static PyObject *__pyx_f_7sklearn_7cluster_14_k_means_elkan_update_labels_distan
   for (__pyx_t_2 = 0; __pyx_t_2 < __pyx_t_1; __pyx_t_2+=1) {
     __pyx_v_sample = __pyx_t_2;
 
-    /* "sklearn/cluster/_k_means_elkan.pyx":47
+    /* "sklearn/cluster/_k_means_elkan.pyx":45
  *     for sample in range(n_samples):
  *         # assign first cluster center
  *         c_x = 0             # <<<<<<<<<<<<<<
  *         x = X + sample * n_features
- *         d_c = d(x, centers, n_features)
+ *         d_c = euclidian_dist(x, centers, n_features)
  */
     __pyx_v_c_x = 0;
 
-    /* "sklearn/cluster/_k_means_elkan.pyx":48
+    /* "sklearn/cluster/_k_means_elkan.pyx":46
  *         # assign first cluster center
  *         c_x = 0
  *         x = X + sample * n_features             # <<<<<<<<<<<<<<
- *         d_c = d(x, centers, n_features)
+ *         d_c = euclidian_dist(x, centers, n_features)
  *         lower_bounds[sample, 0] = d_c
  */
     __pyx_v_x = (__pyx_v_X + (__pyx_v_sample * __pyx_v_n_features));
 
-    /* "sklearn/cluster/_k_means_elkan.pyx":49
+    /* "sklearn/cluster/_k_means_elkan.pyx":47
  *         c_x = 0
  *         x = X + sample * n_features
- *         d_c = d(x, centers, n_features)             # <<<<<<<<<<<<<<
+ *         d_c = euclidian_dist(x, centers, n_features)             # <<<<<<<<<<<<<<
  *         lower_bounds[sample, 0] = d_c
- *         for j in range(n_clusters):
+ *         for j in range(1, n_clusters):
  */
-    __pyx_v_d_c = __pyx_f_7sklearn_7cluster_14_k_means_elkan_d(__pyx_v_x, __pyx_v_centers, __pyx_v_n_features);
+    __pyx_v_d_c = __pyx_f_7sklearn_7cluster_14_k_means_elkan_euclidian_dist(__pyx_v_x, __pyx_v_centers, __pyx_v_n_features);
 
-    /* "sklearn/cluster/_k_means_elkan.pyx":50
+    /* "sklearn/cluster/_k_means_elkan.pyx":48
  *         x = X + sample * n_features
- *         d_c = d(x, centers, n_features)
+ *         d_c = euclidian_dist(x, centers, n_features)
  *         lower_bounds[sample, 0] = d_c             # <<<<<<<<<<<<<<
- *         for j in range(n_clusters):
+ *         for j in range(1, n_clusters):
  *             if d_c > center_distances[c_x, j]:
  */
     __pyx_t_3 = __pyx_v_sample;
     __pyx_t_4 = 0;
     *((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_lower_bounds.data + __pyx_t_3 * __pyx_v_lower_bounds.strides[0]) ) + __pyx_t_4 * __pyx_v_lower_bounds.strides[1]) )) = __pyx_v_d_c;
 
-    /* "sklearn/cluster/_k_means_elkan.pyx":51
- *         d_c = d(x, centers, n_features)
+    /* "sklearn/cluster/_k_means_elkan.pyx":49
+ *         d_c = euclidian_dist(x, centers, n_features)
  *         lower_bounds[sample, 0] = d_c
- *         for j in range(n_clusters):             # <<<<<<<<<<<<<<
+ *         for j in range(1, n_clusters):             # <<<<<<<<<<<<<<
  *             if d_c > center_distances[c_x, j]:
  *                 c = centers + j * n_features
  */
     __pyx_t_5 = __pyx_v_n_clusters;
-    for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
+    for (__pyx_t_6 = 1; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
       __pyx_v_j = __pyx_t_6;
 
-      /* "sklearn/cluster/_k_means_elkan.pyx":52
+      /* "sklearn/cluster/_k_means_elkan.pyx":50
  *         lower_bounds[sample, 0] = d_c
- *         for j in range(n_clusters):
+ *         for j in range(1, n_clusters):
  *             if d_c > center_distances[c_x, j]:             # <<<<<<<<<<<<<<
  *                 c = centers + j * n_features
- *                 dist = d(x, c, n_features)
+ *                 dist = euclidian_dist(x, c, n_features)
  */
       __pyx_t_7 = __pyx_v_c_x;
       __pyx_t_8 = __pyx_v_j;
       __pyx_t_9 = ((__pyx_v_d_c > (*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_center_distances.data + __pyx_t_7 * __pyx_v_center_distances.strides[0]) ) + __pyx_t_8 * __pyx_v_center_distances.strides[1]) )))) != 0);
       if (__pyx_t_9) {
 
-        /* "sklearn/cluster/_k_means_elkan.pyx":53
- *         for j in range(n_clusters):
+        /* "sklearn/cluster/_k_means_elkan.pyx":51
+ *         for j in range(1, n_clusters):
  *             if d_c > center_distances[c_x, j]:
  *                 c = centers + j * n_features             # <<<<<<<<<<<<<<
- *                 dist = d(x, c, n_features)
+ *                 dist = euclidian_dist(x, c, n_features)
  *                 lower_bounds[sample, j] = dist
  */
         __pyx_v_c = (__pyx_v_centers + (__pyx_v_j * __pyx_v_n_features));
 
-        /* "sklearn/cluster/_k_means_elkan.pyx":54
+        /* "sklearn/cluster/_k_means_elkan.pyx":52
  *             if d_c > center_distances[c_x, j]:
  *                 c = centers + j * n_features
- *                 dist = d(x, c, n_features)             # <<<<<<<<<<<<<<
+ *                 dist = euclidian_dist(x, c, n_features)             # <<<<<<<<<<<<<<
  *                 lower_bounds[sample, j] = dist
  *                 if dist < d_c:
  */
-        __pyx_v_dist = __pyx_f_7sklearn_7cluster_14_k_means_elkan_d(__pyx_v_x, __pyx_v_c, __pyx_v_n_features);
+        __pyx_v_dist = __pyx_f_7sklearn_7cluster_14_k_means_elkan_euclidian_dist(__pyx_v_x, __pyx_v_c, __pyx_v_n_features);
 
-        /* "sklearn/cluster/_k_means_elkan.pyx":55
+        /* "sklearn/cluster/_k_means_elkan.pyx":53
  *                 c = centers + j * n_features
- *                 dist = d(x, c, n_features)
+ *                 dist = euclidian_dist(x, c, n_features)
  *                 lower_bounds[sample, j] = dist             # <<<<<<<<<<<<<<
  *                 if dist < d_c:
  *                     d_c = dist
@@ -2156,8 +2138,8 @@ static PyObject *__pyx_f_7sklearn_7cluster_14_k_means_elkan_update_labels_distan
         __pyx_t_11 = __pyx_v_j;
         *((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_lower_bounds.data + __pyx_t_10 * __pyx_v_lower_bounds.strides[0]) ) + __pyx_t_11 * __pyx_v_lower_bounds.strides[1]) )) = __pyx_v_dist;
 
-        /* "sklearn/cluster/_k_means_elkan.pyx":56
- *                 dist = d(x, c, n_features)
+        /* "sklearn/cluster/_k_means_elkan.pyx":54
+ *                 dist = euclidian_dist(x, c, n_features)
  *                 lower_bounds[sample, j] = dist
  *                 if dist < d_c:             # <<<<<<<<<<<<<<
  *                     d_c = dist
@@ -2166,7 +2148,7 @@ static PyObject *__pyx_f_7sklearn_7cluster_14_k_means_elkan_update_labels_distan
         __pyx_t_9 = ((__pyx_v_dist < __pyx_v_d_c) != 0);
         if (__pyx_t_9) {
 
-          /* "sklearn/cluster/_k_means_elkan.pyx":57
+          /* "sklearn/cluster/_k_means_elkan.pyx":55
  *                 lower_bounds[sample, j] = dist
  *                 if dist < d_c:
  *                     d_c = dist             # <<<<<<<<<<<<<<
@@ -2175,12 +2157,12 @@ static PyObject *__pyx_f_7sklearn_7cluster_14_k_means_elkan_update_labels_distan
  */
           __pyx_v_d_c = __pyx_v_dist;
 
-          /* "sklearn/cluster/_k_means_elkan.pyx":58
+          /* "sklearn/cluster/_k_means_elkan.pyx":56
  *                 if dist < d_c:
  *                     d_c = dist
  *                     c_x = j             # <<<<<<<<<<<<<<
  *         labels[sample] = c_x
- *         distances[sample] = d_c
+ *         upper_bounds[sample] = d_c
  */
           __pyx_v_c_x = __pyx_v_j;
           goto __pyx_L8;
@@ -2191,33 +2173,33 @@ static PyObject *__pyx_f_7sklearn_7cluster_14_k_means_elkan_update_labels_distan
       __pyx_L7:;
     }
 
-    /* "sklearn/cluster/_k_means_elkan.pyx":59
+    /* "sklearn/cluster/_k_means_elkan.pyx":57
  *                     d_c = dist
  *                     c_x = j
  *         labels[sample] = c_x             # <<<<<<<<<<<<<<
- *         distances[sample] = d_c
+ *         upper_bounds[sample] = d_c
  * 
  */
     __pyx_t_5 = __pyx_v_sample;
     *((int *) ( /* dim=0 */ (__pyx_v_labels.data + __pyx_t_5 * __pyx_v_labels.strides[0]) )) = __pyx_v_c_x;
 
-    /* "sklearn/cluster/_k_means_elkan.pyx":60
+    /* "sklearn/cluster/_k_means_elkan.pyx":58
  *                     c_x = j
  *         labels[sample] = c_x
- *         distances[sample] = d_c             # <<<<<<<<<<<<<<
+ *         upper_bounds[sample] = d_c             # <<<<<<<<<<<<<<
  * 
  * 
  */
     __pyx_t_6 = __pyx_v_sample;
-    *((double *) ( /* dim=0 */ (__pyx_v_distances.data + __pyx_t_6 * __pyx_v_distances.strides[0]) )) = __pyx_v_d_c;
+    *((double *) ( /* dim=0 */ (__pyx_v_upper_bounds.data + __pyx_t_6 * __pyx_v_upper_bounds.strides[0]) )) = __pyx_v_d_c;
   }
 
-  /* "sklearn/cluster/_k_means_elkan.pyx":35
+  /* "sklearn/cluster/_k_means_elkan.pyx":33
  * 
  * 
  * cdef update_labels_distances_inplace(             # <<<<<<<<<<<<<<
  *         double* X, double* centers, double[:, :] center_distances, int[:] labels,
- *         double[:, :] lower_bounds, double[:] distances, int n_samples, int
+ *         double[:, :] lower_bounds, double[:] upper_bounds, int n_samples, int
  */
 
   /* function exit code */
@@ -2227,7 +2209,7 @@ static PyObject *__pyx_f_7sklearn_7cluster_14_k_means_elkan_update_labels_distan
   return __pyx_r;
 }
 
-/* "sklearn/cluster/_k_means_elkan.pyx":63
+/* "sklearn/cluster/_k_means_elkan.pyx":61
  * 
  * 
  * def k_means_elkan(X_, int n_clusters, init, float tol=1e-4, int max_iter=30, verbose=False):             # <<<<<<<<<<<<<<
@@ -2277,12 +2259,12 @@ static PyObject *__pyx_pw_7sklearn_7cluster_14_k_means_elkan_1k_means_elkan(PyOb
         case  1:
         if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_n_clusters)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("k_means_elkan", 0, 3, 6, 1); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 63; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+          __Pyx_RaiseArgtupleInvalid("k_means_elkan", 0, 3, 6, 1); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 61; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
         }
         case  2:
         if (likely((values[2] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_init)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("k_means_elkan", 0, 3, 6, 2); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 63; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+          __Pyx_RaiseArgtupleInvalid("k_means_elkan", 0, 3, 6, 2); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 61; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
         }
         case  3:
         if (kw_args > 0) {
@@ -2301,7 +2283,7 @@ static PyObject *__pyx_pw_7sklearn_7cluster_14_k_means_elkan_1k_means_elkan(PyOb
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "k_means_elkan") < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 63; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "k_means_elkan") < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 61; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -2316,15 +2298,15 @@ static PyObject *__pyx_pw_7sklearn_7cluster_14_k_means_elkan_1k_means_elkan(PyOb
       }
     }
     __pyx_v_X_ = values[0];
-    __pyx_v_n_clusters = __Pyx_PyInt_As_int(values[1]); if (unlikely((__pyx_v_n_clusters == (int)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 63; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+    __pyx_v_n_clusters = __Pyx_PyInt_As_int(values[1]); if (unlikely((__pyx_v_n_clusters == (int)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 61; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
     __pyx_v_init = values[2];
     if (values[3]) {
-      __pyx_v_tol = __pyx_PyFloat_AsFloat(values[3]); if (unlikely((__pyx_v_tol == (float)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 63; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+      __pyx_v_tol = __pyx_PyFloat_AsFloat(values[3]); if (unlikely((__pyx_v_tol == (float)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 61; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
     } else {
       __pyx_v_tol = ((float)1e-4);
     }
     if (values[4]) {
-      __pyx_v_max_iter = __Pyx_PyInt_As_int(values[4]); if (unlikely((__pyx_v_max_iter == (int)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 63; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+      __pyx_v_max_iter = __Pyx_PyInt_As_int(values[4]); if (unlikely((__pyx_v_max_iter == (int)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 61; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
     } else {
       __pyx_v_max_iter = ((int)30);
     }
@@ -2332,7 +2314,7 @@ static PyObject *__pyx_pw_7sklearn_7cluster_14_k_means_elkan_1k_means_elkan(PyOb
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("k_means_elkan", 0, 3, 6, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 63; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+  __Pyx_RaiseArgtupleInvalid("k_means_elkan", 0, 3, 6, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 61; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
   __Pyx_AddTraceback("sklearn.cluster._k_means_elkan.k_means_elkan", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -2350,8 +2332,8 @@ static PyObject *__pyx_pf_7sklearn_7cluster_14_k_means_elkan_k_means_elkan(CYTHO
   double *__pyx_v_centers_p;
   double *__pyx_v_X_p;
   double *__pyx_v_x_p;
-  int __pyx_v_n_samples;
-  int __pyx_v_n_features;
+  Py_ssize_t __pyx_v_n_samples;
+  Py_ssize_t __pyx_v_n_features;
   int __pyx_v_point_index;
   int __pyx_v_center_index;
   int __pyx_v_label;
@@ -2374,7 +2356,7 @@ static PyObject *__pyx_pf_7sklearn_7cluster_14_k_means_elkan_k_means_elkan(CYTHO
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
   PyObject *__pyx_t_2 = NULL;
-  int __pyx_t_3;
+  Py_ssize_t __pyx_t_3;
   PyObject *__pyx_t_4 = NULL;
   PyObject *__pyx_t_5 = NULL;
   __Pyx_memviewslice __pyx_t_6 = { 0, 0, { 0 }, { 0 }, { 0 } };
@@ -2406,14 +2388,13 @@ static PyObject *__pyx_pf_7sklearn_7cluster_14_k_means_elkan_k_means_elkan(CYTHO
   int __pyx_t_32;
   int __pyx_t_33;
   int __pyx_t_34;
-  Py_ssize_t __pyx_t_35;
-  PyObject *__pyx_t_36 = NULL;
+  PyObject *__pyx_t_35 = NULL;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("k_means_elkan", 0);
 
-  /* "sklearn/cluster/_k_means_elkan.pyx":87
+  /* "sklearn/cluster/_k_means_elkan.pyx":85
  *     """
  *     #initialize
  *     centers_ = init             # <<<<<<<<<<<<<<
@@ -2423,66 +2404,66 @@ static PyObject *__pyx_pf_7sklearn_7cluster_14_k_means_elkan_k_means_elkan(CYTHO
   __Pyx_INCREF(__pyx_v_init);
   __pyx_v_centers_ = __pyx_v_init;
 
-  /* "sklearn/cluster/_k_means_elkan.pyx":88
+  /* "sklearn/cluster/_k_means_elkan.pyx":86
  *     #initialize
  *     centers_ = init
  *     cdef double* centers_p = getfloatpointer(centers_)             # <<<<<<<<<<<<<<
  *     cdef double* X_p = getfloatpointer(X_)
  *     cdef double* x_p
  */
-  if (!(likely(((__pyx_v_centers_) == Py_None) || likely(__Pyx_TypeTest(__pyx_v_centers_, __pyx_ptype_5numpy_ndarray))))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 88; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (!(likely(((__pyx_v_centers_) == Py_None) || likely(__Pyx_TypeTest(__pyx_v_centers_, __pyx_ptype_5numpy_ndarray))))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 86; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_v_centers_p = __pyx_f_7sklearn_7cluster_14_k_means_elkan_getfloatpointer(((PyArrayObject *)__pyx_v_centers_));
 
-  /* "sklearn/cluster/_k_means_elkan.pyx":89
+  /* "sklearn/cluster/_k_means_elkan.pyx":87
  *     centers_ = init
  *     cdef double* centers_p = getfloatpointer(centers_)
  *     cdef double* X_p = getfloatpointer(X_)             # <<<<<<<<<<<<<<
  *     cdef double* x_p
- *     cdef int n_samples = X_.shape[0]
+ *     cdef Py_ssize_t n_samples = X_.shape[0]
  */
-  if (!(likely(((__pyx_v_X_) == Py_None) || likely(__Pyx_TypeTest(__pyx_v_X_, __pyx_ptype_5numpy_ndarray))))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 89; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (!(likely(((__pyx_v_X_) == Py_None) || likely(__Pyx_TypeTest(__pyx_v_X_, __pyx_ptype_5numpy_ndarray))))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 87; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_v_X_p = __pyx_f_7sklearn_7cluster_14_k_means_elkan_getfloatpointer(((PyArrayObject *)__pyx_v_X_));
 
-  /* "sklearn/cluster/_k_means_elkan.pyx":91
+  /* "sklearn/cluster/_k_means_elkan.pyx":89
  *     cdef double* X_p = getfloatpointer(X_)
  *     cdef double* x_p
- *     cdef int n_samples = X_.shape[0]             # <<<<<<<<<<<<<<
- *     cdef int n_features = X_.shape[1]
+ *     cdef Py_ssize_t n_samples = X_.shape[0]             # <<<<<<<<<<<<<<
+ *     cdef Py_ssize_t n_features = X_.shape[1]
  *     cdef int point_index, center_index, label
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_X_, __pyx_n_s_shape); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 91; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_X_, __pyx_n_s_shape); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 89; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_GetItemInt(__pyx_t_1, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_2 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 91; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __pyx_t_2 = __Pyx_GetItemInt(__pyx_t_1, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_2 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 89; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_3 = __Pyx_PyInt_As_int(__pyx_t_2); if (unlikely((__pyx_t_3 == (int)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 91; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = __Pyx_PyIndex_AsSsize_t(__pyx_t_2); if (unlikely((__pyx_t_3 == (Py_ssize_t)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 89; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_n_samples = __pyx_t_3;
 
-  /* "sklearn/cluster/_k_means_elkan.pyx":92
+  /* "sklearn/cluster/_k_means_elkan.pyx":90
  *     cdef double* x_p
- *     cdef int n_samples = X_.shape[0]
- *     cdef int n_features = X_.shape[1]             # <<<<<<<<<<<<<<
+ *     cdef Py_ssize_t n_samples = X_.shape[0]
+ *     cdef Py_ssize_t n_features = X_.shape[1]             # <<<<<<<<<<<<<<
  *     cdef int point_index, center_index, label
  *     cdef float upper_bound, distance
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_X_, __pyx_n_s_shape); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 92; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_X_, __pyx_n_s_shape); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 90; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = __Pyx_GetItemInt(__pyx_t_2, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_1 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 92; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __pyx_t_1 = __Pyx_GetItemInt(__pyx_t_2, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_1 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 90; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_3 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_3 == (int)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 92; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = __Pyx_PyIndex_AsSsize_t(__pyx_t_1); if (unlikely((__pyx_t_3 == (Py_ssize_t)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 90; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_n_features = __pyx_t_3;
 
-  /* "sklearn/cluster/_k_means_elkan.pyx":95
+  /* "sklearn/cluster/_k_means_elkan.pyx":93
  *     cdef int point_index, center_index, label
  *     cdef float upper_bound, distance
  *     cdef double[:, :] center_distances = euclidean_distances(centers_) / 2.             # <<<<<<<<<<<<<<
  *     cdef double[:, :] lower_bounds = np.zeros((n_samples, n_clusters))
  *     cdef double[:] distance_next_center
  */
-  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_euclidean_distances); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 95; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_euclidean_distances); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 93; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_4 = NULL;
   if (CYTHON_COMPILING_IN_CPYTHON && unlikely(PyMethod_Check(__pyx_t_2))) {
@@ -2495,47 +2476,47 @@ static PyObject *__pyx_pf_7sklearn_7cluster_14_k_means_elkan_k_means_elkan(CYTHO
     }
   }
   if (!__pyx_t_4) {
-    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_centers_); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 95; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_centers_); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 93; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
   } else {
-    __pyx_t_5 = PyTuple_New(1+1); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 95; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_5 = PyTuple_New(1+1); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 93; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_5);
     PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_4); __Pyx_GIVEREF(__pyx_t_4); __pyx_t_4 = NULL;
     __Pyx_INCREF(__pyx_v_centers_);
     PyTuple_SET_ITEM(__pyx_t_5, 0+1, __pyx_v_centers_);
     __Pyx_GIVEREF(__pyx_v_centers_);
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_5, NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 95; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_5, NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 93; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   }
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyNumber_Divide(__pyx_t_1, __pyx_float_2_); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 95; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __Pyx_PyNumber_Divide(__pyx_t_1, __pyx_float_2_); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 93; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_dsds_double(__pyx_t_2);
-  if (unlikely(!__pyx_t_6.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 95; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (unlikely(!__pyx_t_6.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 93; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_center_distances = __pyx_t_6;
   __pyx_t_6.memview = NULL;
   __pyx_t_6.data = NULL;
 
-  /* "sklearn/cluster/_k_means_elkan.pyx":96
+  /* "sklearn/cluster/_k_means_elkan.pyx":94
  *     cdef float upper_bound, distance
  *     cdef double[:, :] center_distances = euclidean_distances(centers_) / 2.
  *     cdef double[:, :] lower_bounds = np.zeros((n_samples, n_clusters))             # <<<<<<<<<<<<<<
  *     cdef double[:] distance_next_center
  *     labels_ = np.empty(n_samples, dtype=np.int32)
  */
-  __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 94; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_zeros); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_zeros); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 94; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_n_samples); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyInt_FromSsize_t(__pyx_v_n_samples); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 94; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_n_clusters); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_n_clusters); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 94; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_7 = PyTuple_New(2); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_7 = PyTuple_New(2); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 94; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_7);
   PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_t_1);
   __Pyx_GIVEREF(__pyx_t_1);
@@ -2554,57 +2535,57 @@ static PyObject *__pyx_pf_7sklearn_7cluster_14_k_means_elkan_k_means_elkan(CYTHO
     }
   }
   if (!__pyx_t_4) {
-    __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_t_7); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_t_7); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 94; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
     __Pyx_GOTREF(__pyx_t_2);
   } else {
-    __pyx_t_1 = PyTuple_New(1+1); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = PyTuple_New(1+1); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 94; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
     PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_4); __Pyx_GIVEREF(__pyx_t_4); __pyx_t_4 = NULL;
     PyTuple_SET_ITEM(__pyx_t_1, 0+1, __pyx_t_7);
     __Pyx_GIVEREF(__pyx_t_7);
     __pyx_t_7 = 0;
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_1, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_1, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 94; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   }
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_dsds_double(__pyx_t_2);
-  if (unlikely(!__pyx_t_6.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (unlikely(!__pyx_t_6.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 94; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_lower_bounds = __pyx_t_6;
   __pyx_t_6.memview = NULL;
   __pyx_t_6.data = NULL;
 
-  /* "sklearn/cluster/_k_means_elkan.pyx":98
+  /* "sklearn/cluster/_k_means_elkan.pyx":96
  *     cdef double[:, :] lower_bounds = np.zeros((n_samples, n_clusters))
  *     cdef double[:] distance_next_center
  *     labels_ = np.empty(n_samples, dtype=np.int32)             # <<<<<<<<<<<<<<
  *     cdef int[:] labels = labels_
  *     upper_bounds_ = np.empty(n_samples, dtype=np.float)
  */
-  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 98; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_empty); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 98; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_empty); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_n_samples); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 98; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_n_samples); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 98; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_2);
   __Pyx_GIVEREF(__pyx_t_2);
   __pyx_t_2 = 0;
-  __pyx_t_2 = PyDict_New(); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 98; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyDict_New(); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_7 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 98; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_7 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_n_s_int32); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 98; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_n_s_int32); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_dtype, __pyx_t_4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 98; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_dtype, __pyx_t_4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 98; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -2612,7 +2593,7 @@ static PyObject *__pyx_pf_7sklearn_7cluster_14_k_means_elkan_k_means_elkan(CYTHO
   __pyx_v_labels_ = __pyx_t_4;
   __pyx_t_4 = 0;
 
-  /* "sklearn/cluster/_k_means_elkan.pyx":99
+  /* "sklearn/cluster/_k_means_elkan.pyx":97
  *     cdef double[:] distance_next_center
  *     labels_ = np.empty(n_samples, dtype=np.int32)
  *     cdef int[:] labels = labels_             # <<<<<<<<<<<<<<
@@ -2620,40 +2601,40 @@ static PyObject *__pyx_pf_7sklearn_7cluster_14_k_means_elkan_k_means_elkan(CYTHO
  *     cdef double[:] upper_bounds = upper_bounds_
  */
   __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_int(__pyx_v_labels_);
-  if (unlikely(!__pyx_t_8.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 99; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (unlikely(!__pyx_t_8.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 97; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_v_labels = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "sklearn/cluster/_k_means_elkan.pyx":100
+  /* "sklearn/cluster/_k_means_elkan.pyx":98
  *     labels_ = np.empty(n_samples, dtype=np.int32)
  *     cdef int[:] labels = labels_
  *     upper_bounds_ = np.empty(n_samples, dtype=np.float)             # <<<<<<<<<<<<<<
  *     cdef double[:] upper_bounds = upper_bounds_
  *     update_labels_distances_inplace(X_p, centers_p, center_distances, labels,
  */
-  __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 100; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 98; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_empty); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 100; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_empty); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 98; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_n_samples); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 100; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = PyInt_FromSsize_t(__pyx_v_n_samples); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 98; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 100; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 98; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_4);
   __Pyx_GIVEREF(__pyx_t_4);
   __pyx_t_4 = 0;
-  __pyx_t_4 = PyDict_New(); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 100; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = PyDict_New(); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 98; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 100; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_5 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 98; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_float); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 100; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_float); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 98; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_dtype, __pyx_t_7) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 100; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_dtype, __pyx_t_7) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 98; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_7 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_1, __pyx_t_4); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 100; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_7 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_1, __pyx_t_4); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 98; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -2661,7 +2642,7 @@ static PyObject *__pyx_pf_7sklearn_7cluster_14_k_means_elkan_k_means_elkan(CYTHO
   __pyx_v_upper_bounds_ = __pyx_t_7;
   __pyx_t_7 = 0;
 
-  /* "sklearn/cluster/_k_means_elkan.pyx":101
+  /* "sklearn/cluster/_k_means_elkan.pyx":99
  *     cdef int[:] labels = labels_
  *     upper_bounds_ = np.empty(n_samples, dtype=np.float)
  *     cdef double[:] upper_bounds = upper_bounds_             # <<<<<<<<<<<<<<
@@ -2669,103 +2650,103 @@ static PyObject *__pyx_pf_7sklearn_7cluster_14_k_means_elkan_k_means_elkan(CYTHO
  *                                     lower_bounds, upper_bounds, n_samples,
  */
   __pyx_t_9 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_v_upper_bounds_);
-  if (unlikely(!__pyx_t_9.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 101; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (unlikely(!__pyx_t_9.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 99; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_v_upper_bounds = __pyx_t_9;
   __pyx_t_9.memview = NULL;
   __pyx_t_9.data = NULL;
 
-  /* "sklearn/cluster/_k_means_elkan.pyx":102
+  /* "sklearn/cluster/_k_means_elkan.pyx":100
  *     upper_bounds_ = np.empty(n_samples, dtype=np.float)
  *     cdef double[:] upper_bounds = upper_bounds_
  *     update_labels_distances_inplace(X_p, centers_p, center_distances, labels,             # <<<<<<<<<<<<<<
  *                                     lower_bounds, upper_bounds, n_samples,
  *                                     n_features, n_clusters)
  */
-  __pyx_t_7 = __pyx_f_7sklearn_7cluster_14_k_means_elkan_update_labels_distances_inplace(__pyx_v_X_p, __pyx_v_centers_p, __pyx_v_center_distances, __pyx_v_labels, __pyx_v_lower_bounds, __pyx_v_upper_bounds, __pyx_v_n_samples, __pyx_v_n_features, __pyx_v_n_clusters); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 102; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_7 = __pyx_f_7sklearn_7cluster_14_k_means_elkan_update_labels_distances_inplace(__pyx_v_X_p, __pyx_v_centers_p, __pyx_v_center_distances, __pyx_v_labels, __pyx_v_lower_bounds, __pyx_v_upper_bounds, __pyx_v_n_samples, __pyx_v_n_features, __pyx_v_n_clusters); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 100; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-  /* "sklearn/cluster/_k_means_elkan.pyx":105
+  /* "sklearn/cluster/_k_means_elkan.pyx":103
  *                                     lower_bounds, upper_bounds, n_samples,
  *                                     n_features, n_clusters)
  *     cdef np.uint8_t[:] bounds_tight = np.ones(n_samples, dtype=np.uint8)             # <<<<<<<<<<<<<<
  *     cdef np.uint8_t[:] points_to_update = np.zeros(n_samples, dtype=np.uint8)
  * 
  */
-  __pyx_t_7 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 105; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_7 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 103; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_n_s_ones); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 105; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_n_s_ones); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 103; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_7 = __Pyx_PyInt_From_int(__pyx_v_n_samples); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 105; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_7 = PyInt_FromSsize_t(__pyx_v_n_samples); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 103; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 105; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 103; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_7);
   __Pyx_GIVEREF(__pyx_t_7);
   __pyx_t_7 = 0;
-  __pyx_t_7 = PyDict_New(); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 105; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_7 = PyDict_New(); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 103; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 105; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 103; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_uint8); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 105; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_uint8); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 103; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (PyDict_SetItem(__pyx_t_7, __pyx_n_s_dtype, __pyx_t_5) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 105; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyDict_SetItem(__pyx_t_7, __pyx_n_s_dtype, __pyx_t_5) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 103; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_1, __pyx_t_7); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 105; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_1, __pyx_t_7); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 103; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
   __pyx_t_10 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_5numpy_uint8_t(__pyx_t_5);
-  if (unlikely(!__pyx_t_10.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 105; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (unlikely(!__pyx_t_10.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 103; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_v_bounds_tight = __pyx_t_10;
   __pyx_t_10.memview = NULL;
   __pyx_t_10.data = NULL;
 
-  /* "sklearn/cluster/_k_means_elkan.pyx":106
+  /* "sklearn/cluster/_k_means_elkan.pyx":104
  *                                     n_features, n_clusters)
  *     cdef np.uint8_t[:] bounds_tight = np.ones(n_samples, dtype=np.uint8)
  *     cdef np.uint8_t[:] points_to_update = np.zeros(n_samples, dtype=np.uint8)             # <<<<<<<<<<<<<<
  * 
  *     if max_iter <= 0:
  */
-  __pyx_t_5 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 106; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_5 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 104; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_zeros); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 106; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_zeros); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 104; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_n_samples); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 106; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_5 = PyInt_FromSsize_t(__pyx_v_n_samples); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 104; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 106; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 104; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_5);
   __Pyx_GIVEREF(__pyx_t_5);
   __pyx_t_5 = 0;
-  __pyx_t_5 = PyDict_New(); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 106; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_5 = PyDict_New(); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 104; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 106; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 104; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_uint8); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 106; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_uint8); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 104; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_dtype, __pyx_t_2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 106; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_dtype, __pyx_t_2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 104; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_7, __pyx_t_1, __pyx_t_5); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 106; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_7, __pyx_t_1, __pyx_t_5); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 104; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_t_10 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_5numpy_uint8_t(__pyx_t_2);
-  if (unlikely(!__pyx_t_10.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 106; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (unlikely(!__pyx_t_10.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 104; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_points_to_update = __pyx_t_10;
   __pyx_t_10.memview = NULL;
   __pyx_t_10.data = NULL;
 
-  /* "sklearn/cluster/_k_means_elkan.pyx":108
+  /* "sklearn/cluster/_k_means_elkan.pyx":106
  *     cdef np.uint8_t[:] points_to_update = np.zeros(n_samples, dtype=np.uint8)
  * 
  *     if max_iter <= 0:             # <<<<<<<<<<<<<<
@@ -2775,144 +2756,144 @@ static PyObject *__pyx_pf_7sklearn_7cluster_14_k_means_elkan_k_means_elkan(CYTHO
   __pyx_t_11 = ((__pyx_v_max_iter <= 0) != 0);
   if (__pyx_t_11) {
 
-    /* "sklearn/cluster/_k_means_elkan.pyx":110
+    /* "sklearn/cluster/_k_means_elkan.pyx":108
  *     if max_iter <= 0:
  *         raise ValueError('Number of iterations should be a positive number'
  *         ', got %d instead' % max_iter)             # <<<<<<<<<<<<<<
  * 
  *     for iteration in range(max_iter):
  */
-    __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_max_iter); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 110; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_max_iter); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 108; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_5 = __Pyx_PyString_Format(__pyx_kp_s_Number_of_iterations_should_be_a, __pyx_t_2); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 110; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_5 = __Pyx_PyString_Format(__pyx_kp_s_Number_of_iterations_should_be_a, __pyx_t_2); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 108; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "sklearn/cluster/_k_means_elkan.pyx":109
+    /* "sklearn/cluster/_k_means_elkan.pyx":107
  * 
  *     if max_iter <= 0:
  *         raise ValueError('Number of iterations should be a positive number'             # <<<<<<<<<<<<<<
  *         ', got %d instead' % max_iter)
  * 
  */
-    __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 109; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 107; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_2);
     PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_5);
     __Pyx_GIVEREF(__pyx_t_5);
     __pyx_t_5 = 0;
-    __pyx_t_5 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_t_2, NULL); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 109; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_5 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_t_2, NULL); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 107; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_Raise(__pyx_t_5, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 109; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 107; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
 
-  /* "sklearn/cluster/_k_means_elkan.pyx":112
+  /* "sklearn/cluster/_k_means_elkan.pyx":110
  *         ', got %d instead' % max_iter)
  * 
  *     for iteration in range(max_iter):             # <<<<<<<<<<<<<<
  *         if verbose:
  *             print("start iteration")
  */
-  __pyx_t_3 = __pyx_v_max_iter;
-  for (__pyx_t_12 = 0; __pyx_t_12 < __pyx_t_3; __pyx_t_12+=1) {
-    __pyx_v_iteration = __pyx_t_12;
+  __pyx_t_12 = __pyx_v_max_iter;
+  for (__pyx_t_13 = 0; __pyx_t_13 < __pyx_t_12; __pyx_t_13+=1) {
+    __pyx_v_iteration = __pyx_t_13;
 
-    /* "sklearn/cluster/_k_means_elkan.pyx":113
+    /* "sklearn/cluster/_k_means_elkan.pyx":111
  * 
  *     for iteration in range(max_iter):
  *         if verbose:             # <<<<<<<<<<<<<<
  *             print("start iteration")
  *         # we could find the closest center in O(n) but
  */
-    __pyx_t_11 = __Pyx_PyObject_IsTrue(__pyx_v_verbose); if (unlikely(__pyx_t_11 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 113; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_11 = __Pyx_PyObject_IsTrue(__pyx_v_verbose); if (unlikely(__pyx_t_11 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 111; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     if (__pyx_t_11) {
 
-      /* "sklearn/cluster/_k_means_elkan.pyx":114
+      /* "sklearn/cluster/_k_means_elkan.pyx":112
  *     for iteration in range(max_iter):
  *         if verbose:
  *             print("start iteration")             # <<<<<<<<<<<<<<
  *         # we could find the closest center in O(n) but
  *         # this does not seem to be the bottleneck
  */
-      if (__Pyx_PrintOne(0, __pyx_kp_s_start_iteration) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 114; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      if (__Pyx_PrintOne(0, __pyx_kp_s_start_iteration) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 112; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       goto __pyx_L6;
     }
     __pyx_L6:;
 
-    /* "sklearn/cluster/_k_means_elkan.pyx":117
+    /* "sklearn/cluster/_k_means_elkan.pyx":115
  *         # we could find the closest center in O(n) but
  *         # this does not seem to be the bottleneck
  *         distance_next_center = np.sort(center_distances, axis=0)[1]             # <<<<<<<<<<<<<<
  *         if verbose:
  *             print("done sorting")
  */
-    __pyx_t_5 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 117; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_5 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 115; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_sort); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 117; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_sort); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 115; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_5 = __pyx_memoryview_fromslice(__pyx_v_center_distances, 2, (PyObject *(*)(char *)) __pyx_memview_get_double, (int (*)(char *, PyObject *)) __pyx_memview_set_double, 0);; if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 117; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_5 = __pyx_memoryview_fromslice(__pyx_v_center_distances, 2, (PyObject *(*)(char *)) __pyx_memview_get_double, (int (*)(char *, PyObject *)) __pyx_memview_set_double, 0);; if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 115; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 117; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 115; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
     PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_5);
     __Pyx_GIVEREF(__pyx_t_5);
     __pyx_t_5 = 0;
-    __pyx_t_5 = PyDict_New(); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 117; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_5 = PyDict_New(); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 115; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_5);
-    if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_axis, __pyx_int_0) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 117; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __pyx_t_7 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_1, __pyx_t_5); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 117; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_axis, __pyx_int_0) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 115; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_7 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_1, __pyx_t_5); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 115; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_7);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_5 = __Pyx_GetItemInt(__pyx_t_7, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_5 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 117; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+    __pyx_t_5 = __Pyx_GetItemInt(__pyx_t_7, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_5 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 115; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
     __pyx_t_9 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_5);
-    if (unlikely(!__pyx_t_9.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 117; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (unlikely(!__pyx_t_9.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 115; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __PYX_XDEC_MEMVIEW(&__pyx_v_distance_next_center, 1);
     __pyx_v_distance_next_center = __pyx_t_9;
     __pyx_t_9.memview = NULL;
     __pyx_t_9.data = NULL;
 
-    /* "sklearn/cluster/_k_means_elkan.pyx":118
+    /* "sklearn/cluster/_k_means_elkan.pyx":116
  *         # this does not seem to be the bottleneck
  *         distance_next_center = np.sort(center_distances, axis=0)[1]
  *         if verbose:             # <<<<<<<<<<<<<<
  *             print("done sorting")
  *         for point_index in range(n_samples):
  */
-    __pyx_t_11 = __Pyx_PyObject_IsTrue(__pyx_v_verbose); if (unlikely(__pyx_t_11 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 118; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_11 = __Pyx_PyObject_IsTrue(__pyx_v_verbose); if (unlikely(__pyx_t_11 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 116; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     if (__pyx_t_11) {
 
-      /* "sklearn/cluster/_k_means_elkan.pyx":119
+      /* "sklearn/cluster/_k_means_elkan.pyx":117
  *         distance_next_center = np.sort(center_distances, axis=0)[1]
  *         if verbose:
  *             print("done sorting")             # <<<<<<<<<<<<<<
  *         for point_index in range(n_samples):
  *             upper_bound = upper_bounds[point_index]
  */
-      if (__Pyx_PrintOne(0, __pyx_kp_s_done_sorting) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 119; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      if (__Pyx_PrintOne(0, __pyx_kp_s_done_sorting) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 117; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       goto __pyx_L7;
     }
     __pyx_L7:;
 
-    /* "sklearn/cluster/_k_means_elkan.pyx":120
+    /* "sklearn/cluster/_k_means_elkan.pyx":118
  *         if verbose:
  *             print("done sorting")
  *         for point_index in range(n_samples):             # <<<<<<<<<<<<<<
  *             upper_bound = upper_bounds[point_index]
  *             label = labels[point_index]
  */
-    __pyx_t_13 = __pyx_v_n_samples;
-    for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
+    __pyx_t_3 = __pyx_v_n_samples;
+    for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_3; __pyx_t_14+=1) {
       __pyx_v_point_index = __pyx_t_14;
 
-      /* "sklearn/cluster/_k_means_elkan.pyx":121
+      /* "sklearn/cluster/_k_means_elkan.pyx":119
  *             print("done sorting")
  *         for point_index in range(n_samples):
  *             upper_bound = upper_bounds[point_index]             # <<<<<<<<<<<<<<
@@ -2922,7 +2903,7 @@ static PyObject *__pyx_pf_7sklearn_7cluster_14_k_means_elkan_k_means_elkan(CYTHO
       __pyx_t_15 = __pyx_v_point_index;
       __pyx_v_upper_bound = (*((double *) ( /* dim=0 */ (__pyx_v_upper_bounds.data + __pyx_t_15 * __pyx_v_upper_bounds.strides[0]) )));
 
-      /* "sklearn/cluster/_k_means_elkan.pyx":122
+      /* "sklearn/cluster/_k_means_elkan.pyx":120
  *         for point_index in range(n_samples):
  *             upper_bound = upper_bounds[point_index]
  *             label = labels[point_index]             # <<<<<<<<<<<<<<
@@ -2932,7 +2913,7 @@ static PyObject *__pyx_pf_7sklearn_7cluster_14_k_means_elkan_k_means_elkan(CYTHO
       __pyx_t_16 = __pyx_v_point_index;
       __pyx_v_label = (*((int *) ( /* dim=0 */ (__pyx_v_labels.data + __pyx_t_16 * __pyx_v_labels.strides[0]) )));
 
-      /* "sklearn/cluster/_k_means_elkan.pyx":123
+      /* "sklearn/cluster/_k_means_elkan.pyx":121
  *             upper_bound = upper_bounds[point_index]
  *             label = labels[point_index]
  *             if distance_next_center[label] >= upper_bound:             # <<<<<<<<<<<<<<
@@ -2943,7 +2924,7 @@ static PyObject *__pyx_pf_7sklearn_7cluster_14_k_means_elkan_k_means_elkan(CYTHO
       __pyx_t_11 = (((*((double *) ( /* dim=0 */ (__pyx_v_distance_next_center.data + __pyx_t_17 * __pyx_v_distance_next_center.strides[0]) ))) >= __pyx_v_upper_bound) != 0);
       if (__pyx_t_11) {
 
-        /* "sklearn/cluster/_k_means_elkan.pyx":124
+        /* "sklearn/cluster/_k_means_elkan.pyx":122
  *             label = labels[point_index]
  *             if distance_next_center[label] >= upper_bound:
  *                 continue             # <<<<<<<<<<<<<<
@@ -2953,7 +2934,7 @@ static PyObject *__pyx_pf_7sklearn_7cluster_14_k_means_elkan_k_means_elkan(CYTHO
         goto __pyx_L8_continue;
       }
 
-      /* "sklearn/cluster/_k_means_elkan.pyx":125
+      /* "sklearn/cluster/_k_means_elkan.pyx":123
  *             if distance_next_center[label] >= upper_bound:
  *                 continue
  *             x_p = X_p + point_index * n_features             # <<<<<<<<<<<<<<
@@ -2962,7 +2943,7 @@ static PyObject *__pyx_pf_7sklearn_7cluster_14_k_means_elkan_k_means_elkan(CYTHO
  */
       __pyx_v_x_p = (__pyx_v_X_p + (__pyx_v_point_index * __pyx_v_n_features));
 
-      /* "sklearn/cluster/_k_means_elkan.pyx":128
+      /* "sklearn/cluster/_k_means_elkan.pyx":126
  *             # check other update conditions
  *             # TODO: get pointer to lower_bounds[point_index, center_index]
  *             for center_index in range(n_clusters):             # <<<<<<<<<<<<<<
@@ -2973,7 +2954,7 @@ static PyObject *__pyx_pf_7sklearn_7cluster_14_k_means_elkan_k_means_elkan(CYTHO
       for (__pyx_t_19 = 0; __pyx_t_19 < __pyx_t_18; __pyx_t_19+=1) {
         __pyx_v_center_index = __pyx_t_19;
 
-        /* "sklearn/cluster/_k_means_elkan.pyx":129
+        /* "sklearn/cluster/_k_means_elkan.pyx":127
  *             # TODO: get pointer to lower_bounds[point_index, center_index]
  *             for center_index in range(n_clusters):
  *                 if (center_index != label             # <<<<<<<<<<<<<<
@@ -2987,7 +2968,7 @@ static PyObject *__pyx_pf_7sklearn_7cluster_14_k_means_elkan_k_means_elkan(CYTHO
           goto __pyx_L14_bool_binop_done;
         }
 
-        /* "sklearn/cluster/_k_means_elkan.pyx":130
+        /* "sklearn/cluster/_k_means_elkan.pyx":128
  *             for center_index in range(n_clusters):
  *                 if (center_index != label
  *                         and (upper_bound > lower_bounds[point_index, center_index])             # <<<<<<<<<<<<<<
@@ -3003,7 +2984,7 @@ static PyObject *__pyx_pf_7sklearn_7cluster_14_k_means_elkan_k_means_elkan(CYTHO
           goto __pyx_L14_bool_binop_done;
         }
 
-        /* "sklearn/cluster/_k_means_elkan.pyx":131
+        /* "sklearn/cluster/_k_means_elkan.pyx":129
  *                 if (center_index != label
  *                         and (upper_bound > lower_bounds[point_index, center_index])
  *                         and (upper_bound > center_distances[center_index, label])):             # <<<<<<<<<<<<<<
@@ -3017,29 +2998,29 @@ static PyObject *__pyx_pf_7sklearn_7cluster_14_k_means_elkan_k_means_elkan(CYTHO
         __pyx_L14_bool_binop_done:;
         if (__pyx_t_11) {
 
-          /* "sklearn/cluster/_k_means_elkan.pyx":133
+          /* "sklearn/cluster/_k_means_elkan.pyx":131
  *                         and (upper_bound > center_distances[center_index, label])):
  *                     # update distance to center
  *                     if not bounds_tight[point_index]:             # <<<<<<<<<<<<<<
- *                         upper_bound = d(x_p, centers_p + label * n_features, n_features)
+ *                         upper_bound = euclidian_dist(x_p, centers_p + label * n_features, n_features)
  *                         lower_bounds[point_index, label] = upper_bound
  */
           __pyx_t_25 = __pyx_v_point_index;
           __pyx_t_11 = ((!((*((__pyx_t_5numpy_uint8_t *) ( /* dim=0 */ (__pyx_v_bounds_tight.data + __pyx_t_25 * __pyx_v_bounds_tight.strides[0]) ))) != 0)) != 0);
           if (__pyx_t_11) {
 
-            /* "sklearn/cluster/_k_means_elkan.pyx":134
+            /* "sklearn/cluster/_k_means_elkan.pyx":132
  *                     # update distance to center
  *                     if not bounds_tight[point_index]:
- *                         upper_bound = d(x_p, centers_p + label * n_features, n_features)             # <<<<<<<<<<<<<<
+ *                         upper_bound = euclidian_dist(x_p, centers_p + label * n_features, n_features)             # <<<<<<<<<<<<<<
  *                         lower_bounds[point_index, label] = upper_bound
  *                         bounds_tight[point_index] = 1
  */
-            __pyx_v_upper_bound = __pyx_f_7sklearn_7cluster_14_k_means_elkan_d(__pyx_v_x_p, (__pyx_v_centers_p + (__pyx_v_label * __pyx_v_n_features)), __pyx_v_n_features);
+            __pyx_v_upper_bound = __pyx_f_7sklearn_7cluster_14_k_means_elkan_euclidian_dist(__pyx_v_x_p, (__pyx_v_centers_p + (__pyx_v_label * __pyx_v_n_features)), __pyx_v_n_features);
 
-            /* "sklearn/cluster/_k_means_elkan.pyx":135
+            /* "sklearn/cluster/_k_means_elkan.pyx":133
  *                     if not bounds_tight[point_index]:
- *                         upper_bound = d(x_p, centers_p + label * n_features, n_features)
+ *                         upper_bound = euclidian_dist(x_p, centers_p + label * n_features, n_features)
  *                         lower_bounds[point_index, label] = upper_bound             # <<<<<<<<<<<<<<
  *                         bounds_tight[point_index] = 1
  *                     # check for relabels
@@ -3048,8 +3029,8 @@ static PyObject *__pyx_pf_7sklearn_7cluster_14_k_means_elkan_k_means_elkan(CYTHO
             __pyx_t_27 = __pyx_v_label;
             *((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_lower_bounds.data + __pyx_t_26 * __pyx_v_lower_bounds.strides[0]) ) + __pyx_t_27 * __pyx_v_lower_bounds.strides[1]) )) = __pyx_v_upper_bound;
 
-            /* "sklearn/cluster/_k_means_elkan.pyx":136
- *                         upper_bound = d(x_p, centers_p + label * n_features, n_features)
+            /* "sklearn/cluster/_k_means_elkan.pyx":134
+ *                         upper_bound = euclidian_dist(x_p, centers_p + label * n_features, n_features)
  *                         lower_bounds[point_index, label] = upper_bound
  *                         bounds_tight[point_index] = 1             # <<<<<<<<<<<<<<
  *                     # check for relabels
@@ -3061,12 +3042,12 @@ static PyObject *__pyx_pf_7sklearn_7cluster_14_k_means_elkan_k_means_elkan(CYTHO
           }
           __pyx_L17:;
 
-          /* "sklearn/cluster/_k_means_elkan.pyx":138
+          /* "sklearn/cluster/_k_means_elkan.pyx":136
  *                         bounds_tight[point_index] = 1
  *                     # check for relabels
  *                     if (upper_bound > lower_bounds[point_index, center_index]             # <<<<<<<<<<<<<<
  *                             or (upper_bound > center_distances[label, center_index])):
- *                         distance = d(x_p, centers_p + center_index * n_features, n_features)
+ *                         distance = euclidian_dist(x_p, centers_p + center_index * n_features, n_features)
  */
           __pyx_t_29 = __pyx_v_point_index;
           __pyx_t_30 = __pyx_v_center_index;
@@ -3077,11 +3058,11 @@ static PyObject *__pyx_pf_7sklearn_7cluster_14_k_means_elkan_k_means_elkan(CYTHO
             goto __pyx_L19_bool_binop_done;
           }
 
-          /* "sklearn/cluster/_k_means_elkan.pyx":139
+          /* "sklearn/cluster/_k_means_elkan.pyx":137
  *                     # check for relabels
  *                     if (upper_bound > lower_bounds[point_index, center_index]
  *                             or (upper_bound > center_distances[label, center_index])):             # <<<<<<<<<<<<<<
- *                         distance = d(x_p, centers_p + center_index * n_features, n_features)
+ *                         distance = euclidian_dist(x_p, centers_p + center_index * n_features, n_features)
  *                         lower_bounds[point_index, center_index] = distance
  */
           __pyx_t_31 = __pyx_v_label;
@@ -3091,18 +3072,18 @@ static PyObject *__pyx_pf_7sklearn_7cluster_14_k_means_elkan_k_means_elkan(CYTHO
           __pyx_L19_bool_binop_done:;
           if (__pyx_t_11) {
 
-            /* "sklearn/cluster/_k_means_elkan.pyx":140
+            /* "sklearn/cluster/_k_means_elkan.pyx":138
  *                     if (upper_bound > lower_bounds[point_index, center_index]
  *                             or (upper_bound > center_distances[label, center_index])):
- *                         distance = d(x_p, centers_p + center_index * n_features, n_features)             # <<<<<<<<<<<<<<
+ *                         distance = euclidian_dist(x_p, centers_p + center_index * n_features, n_features)             # <<<<<<<<<<<<<<
  *                         lower_bounds[point_index, center_index] = distance
  *                         if distance < upper_bound:
  */
-            __pyx_v_distance = __pyx_f_7sklearn_7cluster_14_k_means_elkan_d(__pyx_v_x_p, (__pyx_v_centers_p + (__pyx_v_center_index * __pyx_v_n_features)), __pyx_v_n_features);
+            __pyx_v_distance = __pyx_f_7sklearn_7cluster_14_k_means_elkan_euclidian_dist(__pyx_v_x_p, (__pyx_v_centers_p + (__pyx_v_center_index * __pyx_v_n_features)), __pyx_v_n_features);
 
-            /* "sklearn/cluster/_k_means_elkan.pyx":141
+            /* "sklearn/cluster/_k_means_elkan.pyx":139
  *                             or (upper_bound > center_distances[label, center_index])):
- *                         distance = d(x_p, centers_p + center_index * n_features, n_features)
+ *                         distance = euclidian_dist(x_p, centers_p + center_index * n_features, n_features)
  *                         lower_bounds[point_index, center_index] = distance             # <<<<<<<<<<<<<<
  *                         if distance < upper_bound:
  *                             label = center_index
@@ -3111,8 +3092,8 @@ static PyObject *__pyx_pf_7sklearn_7cluster_14_k_means_elkan_k_means_elkan(CYTHO
             __pyx_t_34 = __pyx_v_center_index;
             *((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_lower_bounds.data + __pyx_t_33 * __pyx_v_lower_bounds.strides[0]) ) + __pyx_t_34 * __pyx_v_lower_bounds.strides[1]) )) = __pyx_v_distance;
 
-            /* "sklearn/cluster/_k_means_elkan.pyx":142
- *                         distance = d(x_p, centers_p + center_index * n_features, n_features)
+            /* "sklearn/cluster/_k_means_elkan.pyx":140
+ *                         distance = euclidian_dist(x_p, centers_p + center_index * n_features, n_features)
  *                         lower_bounds[point_index, center_index] = distance
  *                         if distance < upper_bound:             # <<<<<<<<<<<<<<
  *                             label = center_index
@@ -3121,7 +3102,7 @@ static PyObject *__pyx_pf_7sklearn_7cluster_14_k_means_elkan_k_means_elkan(CYTHO
             __pyx_t_11 = ((__pyx_v_distance < __pyx_v_upper_bound) != 0);
             if (__pyx_t_11) {
 
-              /* "sklearn/cluster/_k_means_elkan.pyx":143
+              /* "sklearn/cluster/_k_means_elkan.pyx":141
  *                         lower_bounds[point_index, center_index] = distance
  *                         if distance < upper_bound:
  *                             label = center_index             # <<<<<<<<<<<<<<
@@ -3130,7 +3111,7 @@ static PyObject *__pyx_pf_7sklearn_7cluster_14_k_means_elkan_k_means_elkan(CYTHO
  */
               __pyx_v_label = __pyx_v_center_index;
 
-              /* "sklearn/cluster/_k_means_elkan.pyx":144
+              /* "sklearn/cluster/_k_means_elkan.pyx":142
  *                         if distance < upper_bound:
  *                             label = center_index
  *                             upper_bound = distance             # <<<<<<<<<<<<<<
@@ -3149,7 +3130,7 @@ static PyObject *__pyx_pf_7sklearn_7cluster_14_k_means_elkan_k_means_elkan(CYTHO
         __pyx_L13:;
       }
 
-      /* "sklearn/cluster/_k_means_elkan.pyx":145
+      /* "sklearn/cluster/_k_means_elkan.pyx":143
  *                             label = center_index
  *                             upper_bound = distance
  *             labels[point_index] = label             # <<<<<<<<<<<<<<
@@ -3159,7 +3140,7 @@ static PyObject *__pyx_pf_7sklearn_7cluster_14_k_means_elkan_k_means_elkan(CYTHO
       __pyx_t_18 = __pyx_v_point_index;
       *((int *) ( /* dim=0 */ (__pyx_v_labels.data + __pyx_t_18 * __pyx_v_labels.strides[0]) )) = __pyx_v_label;
 
-      /* "sklearn/cluster/_k_means_elkan.pyx":146
+      /* "sklearn/cluster/_k_means_elkan.pyx":144
  *                             upper_bound = distance
  *             labels[point_index] = label
  *             upper_bounds[point_index] = upper_bound             # <<<<<<<<<<<<<<
@@ -3171,41 +3152,41 @@ static PyObject *__pyx_pf_7sklearn_7cluster_14_k_means_elkan_k_means_elkan(CYTHO
       __pyx_L8_continue:;
     }
 
-    /* "sklearn/cluster/_k_means_elkan.pyx":147
+    /* "sklearn/cluster/_k_means_elkan.pyx":145
  *             labels[point_index] = label
  *             upper_bounds[point_index] = upper_bound
  *         if verbose:             # <<<<<<<<<<<<<<
  *             print("end inner loop")
  *         # compute new centers
  */
-    __pyx_t_11 = __Pyx_PyObject_IsTrue(__pyx_v_verbose); if (unlikely(__pyx_t_11 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 147; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_11 = __Pyx_PyObject_IsTrue(__pyx_v_verbose); if (unlikely(__pyx_t_11 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 145; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     if (__pyx_t_11) {
 
-      /* "sklearn/cluster/_k_means_elkan.pyx":148
+      /* "sklearn/cluster/_k_means_elkan.pyx":146
  *             upper_bounds[point_index] = upper_bound
  *         if verbose:
  *             print("end inner loop")             # <<<<<<<<<<<<<<
  *         # compute new centers
  *         new_centers = _centers_dense(X_, labels_, n_clusters, upper_bounds_)
  */
-      if (__Pyx_PrintOne(0, __pyx_kp_s_end_inner_loop) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 148; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      if (__Pyx_PrintOne(0, __pyx_kp_s_end_inner_loop) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 146; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       goto __pyx_L22;
     }
     __pyx_L22:;
 
-    /* "sklearn/cluster/_k_means_elkan.pyx":150
+    /* "sklearn/cluster/_k_means_elkan.pyx":148
  *             print("end inner loop")
  *         # compute new centers
  *         new_centers = _centers_dense(X_, labels_, n_clusters, upper_bounds_)             # <<<<<<<<<<<<<<
- *         bounds_tight = np.zeros(n_samples, dtype=np.uint8)
+ *         bounds_tight[:] = 0
  * 
  */
-    __pyx_t_7 = __Pyx_GetModuleGlobalName(__pyx_n_s_centers_dense); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 150; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_7 = __Pyx_GetModuleGlobalName(__pyx_n_s_centers_dense); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 148; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_7);
-    __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_n_clusters); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 150; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_n_clusters); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 148; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_t_2 = NULL;
-    __pyx_t_35 = 0;
+    __pyx_t_3 = 0;
     if (CYTHON_COMPILING_IN_CPYTHON && unlikely(PyMethod_Check(__pyx_t_7))) {
       __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_7);
       if (likely(__pyx_t_2)) {
@@ -3213,214 +3194,203 @@ static PyObject *__pyx_pf_7sklearn_7cluster_14_k_means_elkan_k_means_elkan(CYTHO
         __Pyx_INCREF(__pyx_t_2);
         __Pyx_INCREF(function);
         __Pyx_DECREF_SET(__pyx_t_7, function);
-        __pyx_t_35 = 1;
+        __pyx_t_3 = 1;
       }
     }
-    __pyx_t_4 = PyTuple_New(4+__pyx_t_35); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 150; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_4 = PyTuple_New(4+__pyx_t_3); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 148; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_4);
     if (__pyx_t_2) {
       PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_2); __Pyx_GIVEREF(__pyx_t_2); __pyx_t_2 = NULL;
     }
     __Pyx_INCREF(__pyx_v_X_);
-    PyTuple_SET_ITEM(__pyx_t_4, 0+__pyx_t_35, __pyx_v_X_);
+    PyTuple_SET_ITEM(__pyx_t_4, 0+__pyx_t_3, __pyx_v_X_);
     __Pyx_GIVEREF(__pyx_v_X_);
     __Pyx_INCREF(__pyx_v_labels_);
-    PyTuple_SET_ITEM(__pyx_t_4, 1+__pyx_t_35, __pyx_v_labels_);
+    PyTuple_SET_ITEM(__pyx_t_4, 1+__pyx_t_3, __pyx_v_labels_);
     __Pyx_GIVEREF(__pyx_v_labels_);
-    PyTuple_SET_ITEM(__pyx_t_4, 2+__pyx_t_35, __pyx_t_1);
+    PyTuple_SET_ITEM(__pyx_t_4, 2+__pyx_t_3, __pyx_t_1);
     __Pyx_GIVEREF(__pyx_t_1);
     __Pyx_INCREF(__pyx_v_upper_bounds_);
-    PyTuple_SET_ITEM(__pyx_t_4, 3+__pyx_t_35, __pyx_v_upper_bounds_);
+    PyTuple_SET_ITEM(__pyx_t_4, 3+__pyx_t_3, __pyx_v_upper_bounds_);
     __Pyx_GIVEREF(__pyx_v_upper_bounds_);
     __pyx_t_1 = 0;
-    __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_7, __pyx_t_4, NULL); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 150; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_7, __pyx_t_4, NULL); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 148; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
     __Pyx_XDECREF_SET(__pyx_v_new_centers, __pyx_t_5);
     __pyx_t_5 = 0;
 
-    /* "sklearn/cluster/_k_means_elkan.pyx":151
+    /* "sklearn/cluster/_k_means_elkan.pyx":149
  *         # compute new centers
  *         new_centers = _centers_dense(X_, labels_, n_clusters, upper_bounds_)
- *         bounds_tight = np.zeros(n_samples, dtype=np.uint8)             # <<<<<<<<<<<<<<
+ *         bounds_tight[:] = 0             # <<<<<<<<<<<<<<
  * 
  *         # compute distance each center moved
  */
-    __pyx_t_5 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 151; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_zeros); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 151; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_7);
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_n_samples); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 151; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 151; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_4);
-    PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_5);
-    __Pyx_GIVEREF(__pyx_t_5);
-    __pyx_t_5 = 0;
-    __pyx_t_5 = PyDict_New(); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 151; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 151; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_uint8); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 151; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_dtype, __pyx_t_2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 151; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_7, __pyx_t_4, __pyx_t_5); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 151; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_10 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_5numpy_uint8_t(__pyx_t_2);
-    if (unlikely(!__pyx_t_10.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 151; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __PYX_XDEC_MEMVIEW(&__pyx_v_bounds_tight, 1);
-    __pyx_v_bounds_tight = __pyx_t_10;
-    __pyx_t_10.memview = NULL;
-    __pyx_t_10.data = NULL;
+    __pyx_t_10.data = __pyx_v_bounds_tight.data;
+    __pyx_t_10.memview = __pyx_v_bounds_tight.memview;
+    __PYX_INC_MEMVIEW(&__pyx_t_10, 0);
+    __pyx_t_10.shape[0] = __pyx_v_bounds_tight.shape[0];
+__pyx_t_10.strides[0] = __pyx_v_bounds_tight.strides[0];
+    __pyx_t_10.suboffsets[0] = -1;
 
-    /* "sklearn/cluster/_k_means_elkan.pyx":154
+{
+        __pyx_t_5numpy_uint8_t __pyx_temp_scalar = 0;
+        {
+            Py_ssize_t __pyx_temp_extent_0 = __pyx_t_10.shape[0];
+            Py_ssize_t __pyx_temp_stride_0 = __pyx_t_10.strides[0];
+            char *__pyx_temp_pointer_0;
+            Py_ssize_t __pyx_temp_idx_0;
+            __pyx_temp_pointer_0 = __pyx_t_10.data;
+            for (__pyx_temp_idx_0 = 0; __pyx_temp_idx_0 < __pyx_temp_extent_0; __pyx_temp_idx_0++) {
+              *((__pyx_t_5numpy_uint8_t *) __pyx_temp_pointer_0) = __pyx_temp_scalar;
+              __pyx_temp_pointer_0 += __pyx_temp_stride_0;
+            }
+        }
+    }
+    __PYX_XDEC_MEMVIEW(&__pyx_t_10, 1);
+
+    /* "sklearn/cluster/_k_means_elkan.pyx":152
  * 
  *         # compute distance each center moved
  *         center_shift = np.sqrt(np.sum((centers_ - new_centers) ** 2, axis=1))             # <<<<<<<<<<<<<<
  *         # update bounds accordingly
  *         lower_bounds = np.maximum(lower_bounds - center_shift, 0)
  */
-    __pyx_t_5 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 154; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_sqrt); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 154; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_4);
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_5 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 154; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_sum); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 154; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_7 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 152; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_7);
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_5 = PyNumber_Subtract(__pyx_v_centers_, __pyx_v_new_centers); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 154; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_1 = PyNumber_Power(__pyx_t_5, __pyx_int_2, Py_None); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 154; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 154; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_5);
-    PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_1);
-    __Pyx_GIVEREF(__pyx_t_1);
-    __pyx_t_1 = 0;
-    __pyx_t_1 = PyDict_New(); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 154; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_1);
-    if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_axis, __pyx_int_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 154; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __pyx_t_36 = __Pyx_PyObject_Call(__pyx_t_7, __pyx_t_5, __pyx_t_1); if (unlikely(!__pyx_t_36)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 154; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_36);
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_n_s_sqrt); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 152; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __pyx_t_7 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 152; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __Pyx_GOTREF(__pyx_t_7);
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_n_s_sum); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 152; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+    __pyx_t_7 = PyNumber_Subtract(__pyx_v_centers_, __pyx_v_new_centers); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 152; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __Pyx_GOTREF(__pyx_t_7);
+    __pyx_t_2 = PyNumber_Power(__pyx_t_7, __pyx_int_2, Py_None); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 152; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __Pyx_GOTREF(__pyx_t_2);
+    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+    __pyx_t_7 = PyTuple_New(1); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 152; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __Pyx_GOTREF(__pyx_t_7);
+    PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_t_2);
+    __Pyx_GIVEREF(__pyx_t_2);
+    __pyx_t_2 = 0;
+    __pyx_t_2 = PyDict_New(); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 152; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __Pyx_GOTREF(__pyx_t_2);
+    if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_axis, __pyx_int_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 152; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_35 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_7, __pyx_t_2); if (unlikely(!__pyx_t_35)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 152; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __Pyx_GOTREF(__pyx_t_35);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_1 = NULL;
+    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __pyx_t_2 = NULL;
     if (CYTHON_COMPILING_IN_CPYTHON && unlikely(PyMethod_Check(__pyx_t_4))) {
-      __pyx_t_1 = PyMethod_GET_SELF(__pyx_t_4);
-      if (likely(__pyx_t_1)) {
+      __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_4);
+      if (likely(__pyx_t_2)) {
         PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
-        __Pyx_INCREF(__pyx_t_1);
+        __Pyx_INCREF(__pyx_t_2);
         __Pyx_INCREF(function);
         __Pyx_DECREF_SET(__pyx_t_4, function);
       }
     }
-    if (!__pyx_t_1) {
-      __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_36); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 154; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-      __Pyx_DECREF(__pyx_t_36); __pyx_t_36 = 0;
-      __Pyx_GOTREF(__pyx_t_2);
-    } else {
-      __pyx_t_5 = PyTuple_New(1+1); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 154; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (!__pyx_t_2) {
+      __pyx_t_5 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_35); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 152; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __Pyx_DECREF(__pyx_t_35); __pyx_t_35 = 0;
       __Pyx_GOTREF(__pyx_t_5);
-      PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_1); __Pyx_GIVEREF(__pyx_t_1); __pyx_t_1 = NULL;
-      PyTuple_SET_ITEM(__pyx_t_5, 0+1, __pyx_t_36);
-      __Pyx_GIVEREF(__pyx_t_36);
-      __pyx_t_36 = 0;
-      __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_5, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 154; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-      __Pyx_GOTREF(__pyx_t_2);
-      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    } else {
+      __pyx_t_7 = PyTuple_New(1+1); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 152; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __Pyx_GOTREF(__pyx_t_7);
+      PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_t_2); __Pyx_GIVEREF(__pyx_t_2); __pyx_t_2 = NULL;
+      PyTuple_SET_ITEM(__pyx_t_7, 0+1, __pyx_t_35);
+      __Pyx_GIVEREF(__pyx_t_35);
+      __pyx_t_35 = 0;
+      __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_7, NULL); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 152; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __Pyx_GOTREF(__pyx_t_5);
+      __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
     }
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __Pyx_XDECREF_SET(__pyx_v_center_shift, __pyx_t_2);
-    __pyx_t_2 = 0;
+    __Pyx_XDECREF_SET(__pyx_v_center_shift, __pyx_t_5);
+    __pyx_t_5 = 0;
 
-    /* "sklearn/cluster/_k_means_elkan.pyx":156
+    /* "sklearn/cluster/_k_means_elkan.pyx":154
  *         center_shift = np.sqrt(np.sum((centers_ - new_centers) ** 2, axis=1))
  *         # update bounds accordingly
  *         lower_bounds = np.maximum(lower_bounds - center_shift, 0)             # <<<<<<<<<<<<<<
  *         upper_bounds = upper_bounds + center_shift[labels_]
  *         # reassign centers
  */
-    __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 156; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 154; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_maximum); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 156; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_5);
+    __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_maximum); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 154; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __Pyx_GOTREF(__pyx_t_7);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = __pyx_memoryview_fromslice(__pyx_v_lower_bounds, 2, (PyObject *(*)(char *)) __pyx_memview_get_double, (int (*)(char *, PyObject *)) __pyx_memview_set_double, 0);; if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 156; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_4 = __pyx_memoryview_fromslice(__pyx_v_lower_bounds, 2, (PyObject *(*)(char *)) __pyx_memview_get_double, (int (*)(char *, PyObject *)) __pyx_memview_set_double, 0);; if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 154; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_36 = PyNumber_Subtract(__pyx_t_4, __pyx_v_center_shift); if (unlikely(!__pyx_t_36)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 156; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_36);
+    __pyx_t_35 = PyNumber_Subtract(__pyx_t_4, __pyx_v_center_shift); if (unlikely(!__pyx_t_35)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 154; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __Pyx_GOTREF(__pyx_t_35);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __pyx_t_4 = NULL;
-    __pyx_t_35 = 0;
-    if (CYTHON_COMPILING_IN_CPYTHON && unlikely(PyMethod_Check(__pyx_t_5))) {
-      __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_5);
+    __pyx_t_3 = 0;
+    if (CYTHON_COMPILING_IN_CPYTHON && unlikely(PyMethod_Check(__pyx_t_7))) {
+      __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_7);
       if (likely(__pyx_t_4)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_5);
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_7);
         __Pyx_INCREF(__pyx_t_4);
         __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_5, function);
-        __pyx_t_35 = 1;
+        __Pyx_DECREF_SET(__pyx_t_7, function);
+        __pyx_t_3 = 1;
       }
     }
-    __pyx_t_1 = PyTuple_New(2+__pyx_t_35); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 156; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_1);
-    if (__pyx_t_4) {
-      PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_4); __Pyx_GIVEREF(__pyx_t_4); __pyx_t_4 = NULL;
-    }
-    PyTuple_SET_ITEM(__pyx_t_1, 0+__pyx_t_35, __pyx_t_36);
-    __Pyx_GIVEREF(__pyx_t_36);
-    __Pyx_INCREF(__pyx_int_0);
-    PyTuple_SET_ITEM(__pyx_t_1, 1+__pyx_t_35, __pyx_int_0);
-    __Pyx_GIVEREF(__pyx_int_0);
-    __pyx_t_36 = 0;
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_1, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 156; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_2 = PyTuple_New(2+__pyx_t_3); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 154; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_dsds_double(__pyx_t_2);
-    if (unlikely(!__pyx_t_6.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 156; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (__pyx_t_4) {
+      PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_4); __Pyx_GIVEREF(__pyx_t_4); __pyx_t_4 = NULL;
+    }
+    PyTuple_SET_ITEM(__pyx_t_2, 0+__pyx_t_3, __pyx_t_35);
+    __Pyx_GIVEREF(__pyx_t_35);
+    __Pyx_INCREF(__pyx_int_0);
+    PyTuple_SET_ITEM(__pyx_t_2, 1+__pyx_t_3, __pyx_int_0);
+    __Pyx_GIVEREF(__pyx_int_0);
+    __pyx_t_35 = 0;
+    __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_7, __pyx_t_2, NULL); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 154; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+    __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_dsds_double(__pyx_t_5);
+    if (unlikely(!__pyx_t_6.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 154; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __PYX_XDEC_MEMVIEW(&__pyx_v_lower_bounds, 1);
     __pyx_v_lower_bounds = __pyx_t_6;
     __pyx_t_6.memview = NULL;
     __pyx_t_6.data = NULL;
 
-    /* "sklearn/cluster/_k_means_elkan.pyx":157
+    /* "sklearn/cluster/_k_means_elkan.pyx":155
  *         # update bounds accordingly
  *         lower_bounds = np.maximum(lower_bounds - center_shift, 0)
  *         upper_bounds = upper_bounds + center_shift[labels_]             # <<<<<<<<<<<<<<
  *         # reassign centers
  *         centers_ = new_centers
  */
-    __pyx_t_2 = __pyx_memoryview_fromslice(__pyx_v_upper_bounds, 1, (PyObject *(*)(char *)) __pyx_memview_get_double, (int (*)(char *, PyObject *)) __pyx_memview_set_double, 0);; if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 157; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_5 = PyObject_GetItem(__pyx_v_center_shift, __pyx_v_labels_); if (unlikely(__pyx_t_5 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 157; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+    __pyx_t_5 = __pyx_memoryview_fromslice(__pyx_v_upper_bounds, 1, (PyObject *(*)(char *)) __pyx_memview_get_double, (int (*)(char *, PyObject *)) __pyx_memview_set_double, 0);; if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 155; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_1 = PyNumber_Add(__pyx_t_2, __pyx_t_5); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 157; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __pyx_t_7 = PyObject_GetItem(__pyx_v_center_shift, __pyx_v_labels_); if (unlikely(__pyx_t_7 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 155; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+    __Pyx_GOTREF(__pyx_t_7);
+    __pyx_t_2 = PyNumber_Add(__pyx_t_5, __pyx_t_7); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 155; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_9 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_1);
-    if (unlikely(!__pyx_t_9.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 157; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+    __pyx_t_9 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_t_2);
+    if (unlikely(!__pyx_t_9.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 155; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __PYX_XDEC_MEMVIEW(&__pyx_v_upper_bounds, 1);
     __pyx_v_upper_bounds = __pyx_t_9;
     __pyx_t_9.memview = NULL;
     __pyx_t_9.data = NULL;
 
-    /* "sklearn/cluster/_k_means_elkan.pyx":159
+    /* "sklearn/cluster/_k_means_elkan.pyx":157
  *         upper_bounds = upper_bounds + center_shift[labels_]
  *         # reassign centers
  *         centers_ = new_centers             # <<<<<<<<<<<<<<
@@ -3430,234 +3400,234 @@ static PyObject *__pyx_pf_7sklearn_7cluster_14_k_means_elkan_k_means_elkan(CYTHO
     __Pyx_INCREF(__pyx_v_new_centers);
     __Pyx_DECREF_SET(__pyx_v_centers_, __pyx_v_new_centers);
 
-    /* "sklearn/cluster/_k_means_elkan.pyx":160
+    /* "sklearn/cluster/_k_means_elkan.pyx":158
  *         # reassign centers
  *         centers_ = new_centers
  *         centers_p = getfloatpointer(new_centers)             # <<<<<<<<<<<<<<
  *         # update between-center distances
  *         center_distances = euclidean_distances(centers_) / 2.
  */
-    if (!(likely(((__pyx_v_new_centers) == Py_None) || likely(__Pyx_TypeTest(__pyx_v_new_centers, __pyx_ptype_5numpy_ndarray))))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 160; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (!(likely(((__pyx_v_new_centers) == Py_None) || likely(__Pyx_TypeTest(__pyx_v_new_centers, __pyx_ptype_5numpy_ndarray))))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 158; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __pyx_v_centers_p = __pyx_f_7sklearn_7cluster_14_k_means_elkan_getfloatpointer(((PyArrayObject *)__pyx_v_new_centers));
 
-    /* "sklearn/cluster/_k_means_elkan.pyx":162
+    /* "sklearn/cluster/_k_means_elkan.pyx":160
  *         centers_p = getfloatpointer(new_centers)
  *         # update between-center distances
  *         center_distances = euclidean_distances(centers_) / 2.             # <<<<<<<<<<<<<<
  *         if verbose:
  *             print('Iteration %i, inertia %s'
  */
-    __pyx_t_5 = __Pyx_GetModuleGlobalName(__pyx_n_s_euclidean_distances); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 162; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_2 = NULL;
-    if (CYTHON_COMPILING_IN_CPYTHON && unlikely(PyMethod_Check(__pyx_t_5))) {
-      __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_5);
-      if (likely(__pyx_t_2)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_5);
-        __Pyx_INCREF(__pyx_t_2);
+    __pyx_t_7 = __Pyx_GetModuleGlobalName(__pyx_n_s_euclidean_distances); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 160; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __Pyx_GOTREF(__pyx_t_7);
+    __pyx_t_5 = NULL;
+    if (CYTHON_COMPILING_IN_CPYTHON && unlikely(PyMethod_Check(__pyx_t_7))) {
+      __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_7);
+      if (likely(__pyx_t_5)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_7);
+        __Pyx_INCREF(__pyx_t_5);
         __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_5, function);
+        __Pyx_DECREF_SET(__pyx_t_7, function);
       }
     }
-    if (!__pyx_t_2) {
-      __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_v_centers_); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 162; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-      __Pyx_GOTREF(__pyx_t_1);
+    if (!__pyx_t_5) {
+      __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_7, __pyx_v_centers_); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 160; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __Pyx_GOTREF(__pyx_t_2);
     } else {
-      __pyx_t_36 = PyTuple_New(1+1); if (unlikely(!__pyx_t_36)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 162; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-      __Pyx_GOTREF(__pyx_t_36);
-      PyTuple_SET_ITEM(__pyx_t_36, 0, __pyx_t_2); __Pyx_GIVEREF(__pyx_t_2); __pyx_t_2 = NULL;
+      __pyx_t_35 = PyTuple_New(1+1); if (unlikely(!__pyx_t_35)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 160; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __Pyx_GOTREF(__pyx_t_35);
+      PyTuple_SET_ITEM(__pyx_t_35, 0, __pyx_t_5); __Pyx_GIVEREF(__pyx_t_5); __pyx_t_5 = NULL;
       __Pyx_INCREF(__pyx_v_centers_);
-      PyTuple_SET_ITEM(__pyx_t_36, 0+1, __pyx_v_centers_);
+      PyTuple_SET_ITEM(__pyx_t_35, 0+1, __pyx_v_centers_);
       __Pyx_GIVEREF(__pyx_v_centers_);
-      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_36, NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 162; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-      __Pyx_GOTREF(__pyx_t_1);
-      __Pyx_DECREF(__pyx_t_36); __pyx_t_36 = 0;
+      __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_7, __pyx_t_35, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 160; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __Pyx_GOTREF(__pyx_t_2);
+      __Pyx_DECREF(__pyx_t_35); __pyx_t_35 = 0;
     }
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_5 = __Pyx_PyNumber_Divide(__pyx_t_1, __pyx_float_2_); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 162; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_5);
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_dsds_double(__pyx_t_5);
-    if (unlikely(!__pyx_t_6.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 162; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+    __pyx_t_7 = __Pyx_PyNumber_Divide(__pyx_t_2, __pyx_float_2_); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 160; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __Pyx_GOTREF(__pyx_t_7);
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_dsds_double(__pyx_t_7);
+    if (unlikely(!__pyx_t_6.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 160; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
     __PYX_XDEC_MEMVIEW(&__pyx_v_center_distances, 1);
     __pyx_v_center_distances = __pyx_t_6;
     __pyx_t_6.memview = NULL;
     __pyx_t_6.data = NULL;
 
-    /* "sklearn/cluster/_k_means_elkan.pyx":163
+    /* "sklearn/cluster/_k_means_elkan.pyx":161
  *         # update between-center distances
  *         center_distances = euclidean_distances(centers_) / 2.
  *         if verbose:             # <<<<<<<<<<<<<<
  *             print('Iteration %i, inertia %s'
  *                   % (iteration, np.sum((X_ - centers_[labels]) ** 2)))
  */
-    __pyx_t_11 = __Pyx_PyObject_IsTrue(__pyx_v_verbose); if (unlikely(__pyx_t_11 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 163; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_11 = __Pyx_PyObject_IsTrue(__pyx_v_verbose); if (unlikely(__pyx_t_11 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 161; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     if (__pyx_t_11) {
 
-      /* "sklearn/cluster/_k_means_elkan.pyx":165
+      /* "sklearn/cluster/_k_means_elkan.pyx":163
  *         if verbose:
  *             print('Iteration %i, inertia %s'
  *                   % (iteration, np.sum((X_ - centers_[labels]) ** 2)))             # <<<<<<<<<<<<<<
  *         center_shift_total = np.sum(center_shift)
  *         if center_shift_total ** 2 < tol:
  */
-      __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_iteration); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 165; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_7 = __Pyx_PyInt_From_int(__pyx_v_iteration); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 163; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __Pyx_GOTREF(__pyx_t_7);
+      __pyx_t_35 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_35)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 163; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __Pyx_GOTREF(__pyx_t_35);
+      __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_35, __pyx_n_s_sum); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 163; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_5);
-      __pyx_t_36 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_36)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 165; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-      __Pyx_GOTREF(__pyx_t_36);
-      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_36, __pyx_n_s_sum); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 165; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-      __Pyx_GOTREF(__pyx_t_2);
-      __Pyx_DECREF(__pyx_t_36); __pyx_t_36 = 0;
-      __pyx_t_36 = __pyx_memoryview_fromslice(__pyx_v_labels, 1, (PyObject *(*)(char *)) __pyx_memview_get_int, (int (*)(char *, PyObject *)) __pyx_memview_set_int, 0);; if (unlikely(!__pyx_t_36)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 165; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-      __Pyx_GOTREF(__pyx_t_36);
-      __pyx_t_4 = PyObject_GetItem(__pyx_v_centers_, __pyx_t_36); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 165; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+      __Pyx_DECREF(__pyx_t_35); __pyx_t_35 = 0;
+      __pyx_t_35 = __pyx_memoryview_fromslice(__pyx_v_labels, 1, (PyObject *(*)(char *)) __pyx_memview_get_int, (int (*)(char *, PyObject *)) __pyx_memview_set_int, 0);; if (unlikely(!__pyx_t_35)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 163; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __Pyx_GOTREF(__pyx_t_35);
+      __pyx_t_4 = PyObject_GetItem(__pyx_v_centers_, __pyx_t_35); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 163; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
       __Pyx_GOTREF(__pyx_t_4);
-      __Pyx_DECREF(__pyx_t_36); __pyx_t_36 = 0;
-      __pyx_t_36 = PyNumber_Subtract(__pyx_v_X_, __pyx_t_4); if (unlikely(!__pyx_t_36)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 165; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-      __Pyx_GOTREF(__pyx_t_36);
+      __Pyx_DECREF(__pyx_t_35); __pyx_t_35 = 0;
+      __pyx_t_35 = PyNumber_Subtract(__pyx_v_X_, __pyx_t_4); if (unlikely(!__pyx_t_35)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 163; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __Pyx_GOTREF(__pyx_t_35);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __pyx_t_4 = PyNumber_Power(__pyx_t_36, __pyx_int_2, Py_None); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 165; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = PyNumber_Power(__pyx_t_35, __pyx_int_2, Py_None); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 163; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
-      __Pyx_DECREF(__pyx_t_36); __pyx_t_36 = 0;
-      __pyx_t_36 = NULL;
-      if (CYTHON_COMPILING_IN_CPYTHON && unlikely(PyMethod_Check(__pyx_t_2))) {
-        __pyx_t_36 = PyMethod_GET_SELF(__pyx_t_2);
-        if (likely(__pyx_t_36)) {
-          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-          __Pyx_INCREF(__pyx_t_36);
+      __Pyx_DECREF(__pyx_t_35); __pyx_t_35 = 0;
+      __pyx_t_35 = NULL;
+      if (CYTHON_COMPILING_IN_CPYTHON && unlikely(PyMethod_Check(__pyx_t_5))) {
+        __pyx_t_35 = PyMethod_GET_SELF(__pyx_t_5);
+        if (likely(__pyx_t_35)) {
+          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_5);
+          __Pyx_INCREF(__pyx_t_35);
           __Pyx_INCREF(function);
-          __Pyx_DECREF_SET(__pyx_t_2, function);
+          __Pyx_DECREF_SET(__pyx_t_5, function);
         }
       }
-      if (!__pyx_t_36) {
-        __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_4); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 165; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      if (!__pyx_t_35) {
+        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_t_4); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 163; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-        __Pyx_GOTREF(__pyx_t_1);
+        __Pyx_GOTREF(__pyx_t_2);
       } else {
-        __pyx_t_7 = PyTuple_New(1+1); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 165; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-        __Pyx_GOTREF(__pyx_t_7);
-        PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_t_36); __Pyx_GIVEREF(__pyx_t_36); __pyx_t_36 = NULL;
-        PyTuple_SET_ITEM(__pyx_t_7, 0+1, __pyx_t_4);
+        __pyx_t_1 = PyTuple_New(1+1); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 163; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __Pyx_GOTREF(__pyx_t_1);
+        PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_35); __Pyx_GIVEREF(__pyx_t_35); __pyx_t_35 = NULL;
+        PyTuple_SET_ITEM(__pyx_t_1, 0+1, __pyx_t_4);
         __Pyx_GIVEREF(__pyx_t_4);
         __pyx_t_4 = 0;
-        __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_7, NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 165; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-        __Pyx_GOTREF(__pyx_t_1);
-        __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+        __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_1, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 163; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __Pyx_GOTREF(__pyx_t_2);
+        __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       }
-      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-      __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 165; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      __pyx_t_5 = PyTuple_New(2); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 163; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __Pyx_GOTREF(__pyx_t_5);
+      PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_7);
+      __Pyx_GIVEREF(__pyx_t_7);
+      PyTuple_SET_ITEM(__pyx_t_5, 1, __pyx_t_2);
+      __Pyx_GIVEREF(__pyx_t_2);
+      __pyx_t_7 = 0;
+      __pyx_t_2 = 0;
+      __pyx_t_2 = __Pyx_PyString_Format(__pyx_kp_s_Iteration_i_inertia_s, __pyx_t_5); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 163; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_2);
-      PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_5);
-      __Pyx_GIVEREF(__pyx_t_5);
-      PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_t_1);
-      __Pyx_GIVEREF(__pyx_t_1);
-      __pyx_t_5 = 0;
-      __pyx_t_1 = 0;
-      __pyx_t_1 = __Pyx_PyString_Format(__pyx_kp_s_Iteration_i_inertia_s, __pyx_t_2); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 165; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-      __Pyx_GOTREF(__pyx_t_1);
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      if (__Pyx_PrintOne(0, __pyx_t_2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 162; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-      if (__Pyx_PrintOne(0, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 164; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       goto __pyx_L23;
     }
     __pyx_L23:;
 
-    /* "sklearn/cluster/_k_means_elkan.pyx":166
+    /* "sklearn/cluster/_k_means_elkan.pyx":164
  *             print('Iteration %i, inertia %s'
  *                   % (iteration, np.sum((X_ - centers_[labels]) ** 2)))
  *         center_shift_total = np.sum(center_shift)             # <<<<<<<<<<<<<<
  *         if center_shift_total ** 2 < tol:
  *             if verbose:
  */
-    __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 166; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_sum); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 166; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_5 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 164; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_5);
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = NULL;
-    if (CYTHON_COMPILING_IN_CPYTHON && unlikely(PyMethod_Check(__pyx_t_5))) {
-      __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_5);
-      if (likely(__pyx_t_2)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_5);
-        __Pyx_INCREF(__pyx_t_2);
+    __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_sum); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 164; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __Pyx_GOTREF(__pyx_t_7);
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __pyx_t_5 = NULL;
+    if (CYTHON_COMPILING_IN_CPYTHON && unlikely(PyMethod_Check(__pyx_t_7))) {
+      __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_7);
+      if (likely(__pyx_t_5)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_7);
+        __Pyx_INCREF(__pyx_t_5);
         __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_5, function);
+        __Pyx_DECREF_SET(__pyx_t_7, function);
       }
     }
-    if (!__pyx_t_2) {
-      __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_v_center_shift); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 166; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-      __Pyx_GOTREF(__pyx_t_1);
+    if (!__pyx_t_5) {
+      __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_7, __pyx_v_center_shift); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 164; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __Pyx_GOTREF(__pyx_t_2);
     } else {
-      __pyx_t_7 = PyTuple_New(1+1); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 166; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-      __Pyx_GOTREF(__pyx_t_7);
-      PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_t_2); __Pyx_GIVEREF(__pyx_t_2); __pyx_t_2 = NULL;
-      __Pyx_INCREF(__pyx_v_center_shift);
-      PyTuple_SET_ITEM(__pyx_t_7, 0+1, __pyx_v_center_shift);
-      __Pyx_GIVEREF(__pyx_v_center_shift);
-      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_7, NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 166; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_1 = PyTuple_New(1+1); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 164; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_1);
-      __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+      PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_5); __Pyx_GIVEREF(__pyx_t_5); __pyx_t_5 = NULL;
+      __Pyx_INCREF(__pyx_v_center_shift);
+      PyTuple_SET_ITEM(__pyx_t_1, 0+1, __pyx_v_center_shift);
+      __Pyx_GIVEREF(__pyx_v_center_shift);
+      __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_7, __pyx_t_1, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 164; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __Pyx_GOTREF(__pyx_t_2);
+      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     }
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __Pyx_XDECREF_SET(__pyx_v_center_shift_total, __pyx_t_1);
-    __pyx_t_1 = 0;
+    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+    __Pyx_XDECREF_SET(__pyx_v_center_shift_total, __pyx_t_2);
+    __pyx_t_2 = 0;
 
-    /* "sklearn/cluster/_k_means_elkan.pyx":167
+    /* "sklearn/cluster/_k_means_elkan.pyx":165
  *                   % (iteration, np.sum((X_ - centers_[labels]) ** 2)))
  *         center_shift_total = np.sum(center_shift)
  *         if center_shift_total ** 2 < tol:             # <<<<<<<<<<<<<<
  *             if verbose:
  *                 print("center shift %e within tolerance %e"
  */
-    __pyx_t_1 = PyNumber_Power(__pyx_v_center_shift_total, __pyx_int_2, Py_None); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 167; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_5 = PyFloat_FromDouble(__pyx_v_tol); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 167; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_7 = PyObject_RichCompare(__pyx_t_1, __pyx_t_5, Py_LT); __Pyx_XGOTREF(__pyx_t_7); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 167; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_11 = __Pyx_PyObject_IsTrue(__pyx_t_7); if (unlikely(__pyx_t_11 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 167; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_2 = PyNumber_Power(__pyx_v_center_shift_total, __pyx_int_2, Py_None); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 165; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __Pyx_GOTREF(__pyx_t_2);
+    __pyx_t_7 = PyFloat_FromDouble(__pyx_v_tol); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 165; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __Pyx_GOTREF(__pyx_t_7);
+    __pyx_t_1 = PyObject_RichCompare(__pyx_t_2, __pyx_t_7, Py_LT); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 165; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+    __pyx_t_11 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_11 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 165; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     if (__pyx_t_11) {
 
-      /* "sklearn/cluster/_k_means_elkan.pyx":168
+      /* "sklearn/cluster/_k_means_elkan.pyx":166
  *         center_shift_total = np.sum(center_shift)
  *         if center_shift_total ** 2 < tol:
  *             if verbose:             # <<<<<<<<<<<<<<
  *                 print("center shift %e within tolerance %e"
  *                       % (center_shift_total, tol))
  */
-      __pyx_t_11 = __Pyx_PyObject_IsTrue(__pyx_v_verbose); if (unlikely(__pyx_t_11 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 168; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_11 = __Pyx_PyObject_IsTrue(__pyx_v_verbose); if (unlikely(__pyx_t_11 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 166; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       if (__pyx_t_11) {
 
-        /* "sklearn/cluster/_k_means_elkan.pyx":170
+        /* "sklearn/cluster/_k_means_elkan.pyx":168
  *             if verbose:
  *                 print("center shift %e within tolerance %e"
  *                       % (center_shift_total, tol))             # <<<<<<<<<<<<<<
  *             break
  *     if center_shift_total > 0:
  */
-        __pyx_t_7 = PyFloat_FromDouble(__pyx_v_tol); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 170; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_1 = PyFloat_FromDouble(__pyx_v_tol); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 168; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __Pyx_GOTREF(__pyx_t_1);
+        __pyx_t_7 = PyTuple_New(2); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 168; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_7);
-        __pyx_t_5 = PyTuple_New(2); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 170; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-        __Pyx_GOTREF(__pyx_t_5);
         __Pyx_INCREF(__pyx_v_center_shift_total);
-        PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_v_center_shift_total);
+        PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_v_center_shift_total);
         __Pyx_GIVEREF(__pyx_v_center_shift_total);
-        PyTuple_SET_ITEM(__pyx_t_5, 1, __pyx_t_7);
-        __Pyx_GIVEREF(__pyx_t_7);
-        __pyx_t_7 = 0;
-        __pyx_t_7 = __Pyx_PyString_Format(__pyx_kp_s_center_shift_e_within_tolerance, __pyx_t_5); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 170; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-        __Pyx_GOTREF(__pyx_t_7);
-        __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-        if (__Pyx_PrintOne(0, __pyx_t_7) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 169; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        PyTuple_SET_ITEM(__pyx_t_7, 1, __pyx_t_1);
+        __Pyx_GIVEREF(__pyx_t_1);
+        __pyx_t_1 = 0;
+        __pyx_t_1 = __Pyx_PyString_Format(__pyx_kp_s_center_shift_e_within_tolerance, __pyx_t_7); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 168; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __Pyx_GOTREF(__pyx_t_1);
         __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+        if (__Pyx_PrintOne(0, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 167; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
         goto __pyx_L25;
       }
       __pyx_L25:;
 
-      /* "sklearn/cluster/_k_means_elkan.pyx":171
+      /* "sklearn/cluster/_k_means_elkan.pyx":169
  *                 print("center shift %e within tolerance %e"
  *                       % (center_shift_total, tol))
  *             break             # <<<<<<<<<<<<<<
@@ -3669,57 +3639,57 @@ static PyObject *__pyx_pf_7sklearn_7cluster_14_k_means_elkan_k_means_elkan(CYTHO
   }
   __pyx_L5_break:;
 
-  /* "sklearn/cluster/_k_means_elkan.pyx":172
+  /* "sklearn/cluster/_k_means_elkan.pyx":170
  *                       % (center_shift_total, tol))
  *             break
  *     if center_shift_total > 0:             # <<<<<<<<<<<<<<
  *         update_labels_distances_inplace(X_p, centers_p, center_distances,
  *                                         labels, lower_bounds, upper_bounds,
  */
-  if (unlikely(!__pyx_v_center_shift_total)) { __Pyx_RaiseUnboundLocalError("center_shift_total"); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 172; __pyx_clineno = __LINE__; goto __pyx_L1_error;} }
-  __pyx_t_7 = PyObject_RichCompare(__pyx_v_center_shift_total, __pyx_int_0, Py_GT); __Pyx_XGOTREF(__pyx_t_7); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 172; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_t_11 = __Pyx_PyObject_IsTrue(__pyx_t_7); if (unlikely(__pyx_t_11 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 172; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+  if (unlikely(!__pyx_v_center_shift_total)) { __Pyx_RaiseUnboundLocalError("center_shift_total"); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 170; __pyx_clineno = __LINE__; goto __pyx_L1_error;} }
+  __pyx_t_1 = PyObject_RichCompare(__pyx_v_center_shift_total, __pyx_int_0, Py_GT); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 170; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_11 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_11 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 170; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   if (__pyx_t_11) {
 
-    /* "sklearn/cluster/_k_means_elkan.pyx":173
+    /* "sklearn/cluster/_k_means_elkan.pyx":171
  *             break
  *     if center_shift_total > 0:
  *         update_labels_distances_inplace(X_p, centers_p, center_distances,             # <<<<<<<<<<<<<<
  *                                         labels, lower_bounds, upper_bounds,
  *                                         n_samples, n_features, n_clusters)
  */
-    __pyx_t_7 = __pyx_f_7sklearn_7cluster_14_k_means_elkan_update_labels_distances_inplace(__pyx_v_X_p, __pyx_v_centers_p, __pyx_v_center_distances, __pyx_v_labels, __pyx_v_lower_bounds, __pyx_v_upper_bounds, __pyx_v_n_samples, __pyx_v_n_features, __pyx_v_n_clusters); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 173; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_7);
-    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+    __pyx_t_1 = __pyx_f_7sklearn_7cluster_14_k_means_elkan_update_labels_distances_inplace(__pyx_v_X_p, __pyx_v_centers_p, __pyx_v_center_distances, __pyx_v_labels, __pyx_v_lower_bounds, __pyx_v_upper_bounds, __pyx_v_n_samples, __pyx_v_n_features, __pyx_v_n_clusters); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 171; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     goto __pyx_L26;
   }
   __pyx_L26:;
 
-  /* "sklearn/cluster/_k_means_elkan.pyx":176
+  /* "sklearn/cluster/_k_means_elkan.pyx":174
  *                                         labels, lower_bounds, upper_bounds,
  *                                         n_samples, n_features, n_clusters)
  *     return centers_, labels_, iteration             # <<<<<<<<<<<<<<
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_7 = __Pyx_PyInt_From_int(__pyx_v_iteration); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 176; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_iteration); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 174; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_7 = PyTuple_New(3); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 174; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_5 = PyTuple_New(3); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 176; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_5);
   __Pyx_INCREF(__pyx_v_centers_);
-  PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_v_centers_);
+  PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_v_centers_);
   __Pyx_GIVEREF(__pyx_v_centers_);
   __Pyx_INCREF(__pyx_v_labels_);
-  PyTuple_SET_ITEM(__pyx_t_5, 1, __pyx_v_labels_);
+  PyTuple_SET_ITEM(__pyx_t_7, 1, __pyx_v_labels_);
   __Pyx_GIVEREF(__pyx_v_labels_);
-  PyTuple_SET_ITEM(__pyx_t_5, 2, __pyx_t_7);
-  __Pyx_GIVEREF(__pyx_t_7);
+  PyTuple_SET_ITEM(__pyx_t_7, 2, __pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_1);
+  __pyx_t_1 = 0;
+  __pyx_r = __pyx_t_7;
   __pyx_t_7 = 0;
-  __pyx_r = __pyx_t_5;
-  __pyx_t_5 = 0;
   goto __pyx_L0;
 
-  /* "sklearn/cluster/_k_means_elkan.pyx":63
+  /* "sklearn/cluster/_k_means_elkan.pyx":61
  * 
  * 
  * def k_means_elkan(X_, int n_clusters, init, float tol=1e-4, int max_iter=30, verbose=False):             # <<<<<<<<<<<<<<
@@ -3738,7 +3708,7 @@ static PyObject *__pyx_pf_7sklearn_7cluster_14_k_means_elkan_k_means_elkan(CYTHO
   __PYX_XDEC_MEMVIEW(&__pyx_t_8, 1);
   __PYX_XDEC_MEMVIEW(&__pyx_t_9, 1);
   __PYX_XDEC_MEMVIEW(&__pyx_t_10, 1);
-  __Pyx_XDECREF(__pyx_t_36);
+  __Pyx_XDECREF(__pyx_t_35);
   __Pyx_AddTraceback("sklearn.cluster._k_means_elkan.k_means_elkan", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
@@ -17202,7 +17172,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
 };
 static int __Pyx_InitCachedBuiltins(void) {
   __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 27; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 109; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 107; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_builtin_RuntimeError = __Pyx_GetBuiltinName(__pyx_n_s_RuntimeError); if (!__pyx_builtin_RuntimeError) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 802; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_builtin_MemoryError = __Pyx_GetBuiltinName(__pyx_n_s_MemoryError); if (!__pyx_builtin_MemoryError) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 142; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_builtin_enumerate = __Pyx_GetBuiltinName(__pyx_n_s_enumerate); if (!__pyx_builtin_enumerate) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 145; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
@@ -17420,17 +17390,17 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__18);
   __Pyx_GIVEREF(__pyx_tuple__18);
 
-  /* "sklearn/cluster/_k_means_elkan.pyx":63
+  /* "sklearn/cluster/_k_means_elkan.pyx":61
  * 
  * 
  * def k_means_elkan(X_, int n_clusters, init, float tol=1e-4, int max_iter=30, verbose=False):             # <<<<<<<<<<<<<<
  *     """Run Elkan's k-means.
  * 
  */
-  __pyx_tuple__19 = PyTuple_Pack(30, __pyx_n_s_X, __pyx_n_s_n_clusters, __pyx_n_s_init, __pyx_n_s_tol, __pyx_n_s_max_iter, __pyx_n_s_verbose, __pyx_n_s_centers, __pyx_n_s_centers_p, __pyx_n_s_X_p, __pyx_n_s_x_p, __pyx_n_s_n_samples, __pyx_n_s_n_features, __pyx_n_s_point_index, __pyx_n_s_center_index, __pyx_n_s_label, __pyx_n_s_upper_bound, __pyx_n_s_distance, __pyx_n_s_center_distances, __pyx_n_s_lower_bounds, __pyx_n_s_distance_next_center, __pyx_n_s_labels, __pyx_n_s_labels_2, __pyx_n_s_upper_bounds, __pyx_n_s_upper_bounds_2, __pyx_n_s_bounds_tight, __pyx_n_s_points_to_update, __pyx_n_s_iteration, __pyx_n_s_new_centers, __pyx_n_s_center_shift, __pyx_n_s_center_shift_total); if (unlikely(!__pyx_tuple__19)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 63; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__19 = PyTuple_Pack(30, __pyx_n_s_X, __pyx_n_s_n_clusters, __pyx_n_s_init, __pyx_n_s_tol, __pyx_n_s_max_iter, __pyx_n_s_verbose, __pyx_n_s_centers, __pyx_n_s_centers_p, __pyx_n_s_X_p, __pyx_n_s_x_p, __pyx_n_s_n_samples, __pyx_n_s_n_features, __pyx_n_s_point_index, __pyx_n_s_center_index, __pyx_n_s_label, __pyx_n_s_upper_bound, __pyx_n_s_distance, __pyx_n_s_center_distances, __pyx_n_s_lower_bounds, __pyx_n_s_distance_next_center, __pyx_n_s_labels, __pyx_n_s_labels_2, __pyx_n_s_upper_bounds, __pyx_n_s_upper_bounds_2, __pyx_n_s_bounds_tight, __pyx_n_s_points_to_update, __pyx_n_s_iteration, __pyx_n_s_new_centers, __pyx_n_s_center_shift, __pyx_n_s_center_shift_total); if (unlikely(!__pyx_tuple__19)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 61; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__19);
   __Pyx_GIVEREF(__pyx_tuple__19);
-  __pyx_codeobj__20 = (PyObject*)__Pyx_PyCode_New(6, 0, 30, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__19, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_home_vighnesh_git_scikit_learn, __pyx_n_s_k_means_elkan, 63, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__20)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 63; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_codeobj__20 = (PyObject*)__Pyx_PyCode_New(6, 0, 30, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__19, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_home_vighnesh_git_scikit_learn, __pyx_n_s_k_means_elkan, 61, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__20)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 61; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
   /* "View.MemoryView":276
  *         return self.name
@@ -17689,16 +17659,16 @@ PyMODINIT_FUNC PyInit__k_means_elkan(void)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "sklearn/cluster/_k_means_elkan.pyx":63
+  /* "sklearn/cluster/_k_means_elkan.pyx":61
  * 
  * 
  * def k_means_elkan(X_, int n_clusters, init, float tol=1e-4, int max_iter=30, verbose=False):             # <<<<<<<<<<<<<<
  *     """Run Elkan's k-means.
  * 
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_7sklearn_7cluster_14_k_means_elkan_1k_means_elkan, NULL, __pyx_n_s_sklearn_cluster__k_means_elkan); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 63; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_7sklearn_7cluster_14_k_means_elkan_1k_means_elkan, NULL, __pyx_n_s_sklearn_cluster__k_means_elkan); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 61; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_k_means_elkan, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 63; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_k_means_elkan, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 61; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
   /* "sklearn/cluster/_k_means_elkan.pyx":1

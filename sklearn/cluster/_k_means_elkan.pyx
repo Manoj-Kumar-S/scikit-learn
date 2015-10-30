@@ -20,21 +20,19 @@ cdef double *getfloatpointer(np.ndarray[np.float64_t, ndim=2, mode='c'] data):
     return <double *>(data.data)
 
 
-cdef double d(double* a, double* b, int n_features) nogil:
+cdef double euclidian_dist(double* a, double* b, int n_features) nogil:
     cdef double result, tmp
     result = 0
     cdef int i
     for i in range(n_features):
-        tmp = (a[0] - b[0])
-        a += 1
-        b += 1
+        tmp = (a[i] - b[i])
         result += tmp * tmp
     return sqrt(result)
 
 
 cdef update_labels_distances_inplace(
         double* X, double* centers, double[:, :] center_distances, int[:] labels,
-        double[:, :] lower_bounds, double[:] distances, int n_samples, int
+        double[:, :] lower_bounds, double[:] upper_bounds, int n_samples, int
         n_features, int n_clusters):
     # assigns closest center to X
     # uses triangle inequality
@@ -46,18 +44,18 @@ cdef update_labels_distances_inplace(
         # assign first cluster center
         c_x = 0
         x = X + sample * n_features
-        d_c = d(x, centers, n_features)
+        d_c = euclidian_dist(x, centers, n_features)
         lower_bounds[sample, 0] = d_c
-        for j in range(n_clusters):
+        for j in range(1, n_clusters):
             if d_c > center_distances[c_x, j]:
                 c = centers + j * n_features
-                dist = d(x, c, n_features)
+                dist = euclidian_dist(x, c, n_features)
                 lower_bounds[sample, j] = dist
                 if dist < d_c:
                     d_c = dist
                     c_x = j
         labels[sample] = c_x
-        distances[sample] = d_c
+        upper_bounds[sample] = d_c
 
 
 def k_means_elkan(X_, int n_clusters, init, float tol=1e-4, int max_iter=30, verbose=False):
@@ -88,8 +86,8 @@ def k_means_elkan(X_, int n_clusters, init, float tol=1e-4, int max_iter=30, ver
     cdef double* centers_p = getfloatpointer(centers_)
     cdef double* X_p = getfloatpointer(X_)
     cdef double* x_p
-    cdef int n_samples = X_.shape[0]
-    cdef int n_features = X_.shape[1]
+    cdef Py_ssize_t n_samples = X_.shape[0]
+    cdef Py_ssize_t n_features = X_.shape[1]
     cdef int point_index, center_index, label
     cdef float upper_bound, distance
     cdef double[:, :] center_distances = euclidean_distances(centers_) / 2.
@@ -131,13 +129,13 @@ def k_means_elkan(X_, int n_clusters, init, float tol=1e-4, int max_iter=30, ver
                         and (upper_bound > center_distances[center_index, label])):
                     # update distance to center
                     if not bounds_tight[point_index]:
-                        upper_bound = d(x_p, centers_p + label * n_features, n_features)
+                        upper_bound = euclidian_dist(x_p, centers_p + label * n_features, n_features)
                         lower_bounds[point_index, label] = upper_bound
                         bounds_tight[point_index] = 1
                     # check for relabels
                     if (upper_bound > lower_bounds[point_index, center_index]
                             or (upper_bound > center_distances[label, center_index])):
-                        distance = d(x_p, centers_p + center_index * n_features, n_features)
+                        distance = euclidian_dist(x_p, centers_p + center_index * n_features, n_features)
                         lower_bounds[point_index, center_index] = distance
                         if distance < upper_bound:
                             label = center_index
@@ -148,7 +146,7 @@ def k_means_elkan(X_, int n_clusters, init, float tol=1e-4, int max_iter=30, ver
             print("end inner loop")
         # compute new centers
         new_centers = _centers_dense(X_, labels_, n_clusters, upper_bounds_)
-        bounds_tight = np.zeros(n_samples, dtype=np.uint8)
+        bounds_tight[:] = 0
 
         # compute distance each center moved
         center_shift = np.sqrt(np.sum((centers_ - new_centers) ** 2, axis=1))
