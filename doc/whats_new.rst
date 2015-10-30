@@ -92,7 +92,6 @@ API changes summary
      the :mod:`model_selection` module.
      (`#4294 https://github.com/scikit-learn/scikit-learn/pull/4294>`_) by `Raghav R V`_.
 
-=======
 
 .. _changes_0_17:
 
