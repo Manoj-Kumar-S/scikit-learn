@@ -16,10 +16,6 @@ from ..metrics import euclidean_distances
 from ._k_means import _centers_dense
 
 
-cdef double *getfloatpointer(np.ndarray[np.float64_t, ndim=2, mode='c'] data):
-    return <double *>(data.data)
-
-
 cdef double euclidian_dist(double* a, double* b, int n_features) nogil:
     cdef double result, tmp
     result = 0
@@ -58,7 +54,9 @@ cdef update_labels_distances_inplace(
         upper_bounds[sample] = d_c
 
 
-def k_means_elkan(X_, int n_clusters, init, float tol=1e-4, int max_iter=30, verbose=False):
+def k_means_elkan(np.ndarray[np.float64_t, ndim=2, mode='c'] X_, int n_clusters,
+                  np.ndarray[np.float64_t, ndim=2, mode='c'] init,
+                  float tol=1e-4, int max_iter=30, verbose=False):
     """Run Elkan's k-means.
 
     Parameters
@@ -82,9 +80,9 @@ def k_means_elkan(X_, int n_clusters, init, float tol=1e-4, int max_iter=30, ver
 
     """
     #initialize
-    centers_ = init
-    cdef double* centers_p = getfloatpointer(centers_)
-    cdef double* X_p = getfloatpointer(X_)
+    cdef np.ndarray[np.float64_t, ndim=2, mode='c'] centers_ = init
+    cdef double* centers_p = <double*>centers_.data
+    cdef double* X_p = <double*>X_.data
     cdef double* x_p
     cdef Py_ssize_t n_samples = X_.shape[0]
     cdef Py_ssize_t n_features = X_.shape[1]
@@ -102,6 +100,7 @@ def k_means_elkan(X_, int n_clusters, init, float tol=1e-4, int max_iter=30, ver
                                     n_features, n_clusters)
     cdef np.uint8_t[:] bounds_tight = np.ones(n_samples, dtype=np.uint8)
     cdef np.uint8_t[:] points_to_update = np.zeros(n_samples, dtype=np.uint8)
+    cdef np.ndarray[np.float64_t, ndim=2, mode='c'] new_centers
 
     if max_iter <= 0:
         raise ValueError('Number of iterations should be a positive number'
@@ -155,7 +154,7 @@ def k_means_elkan(X_, int n_clusters, init, float tol=1e-4, int max_iter=30, ver
         upper_bounds = upper_bounds + center_shift[labels_]
         # reassign centers
         centers_ = new_centers
-        centers_p = getfloatpointer(new_centers)
+        centers_p = <double*>new_centers.data
         # update between-center distances
         center_distances = euclidean_distances(centers_) / 2.
         if verbose:
