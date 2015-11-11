@@ -340,9 +340,6 @@ Enhancements
 
    - Added the :func:`preprocessing.min_max_scale` function.
 
-   - Added ``algorithm="elkan"`` to :class:`cluster.KMeans` implementing
-     Elkan's fast K-Means algorithm. By `Andreas Müller`_.
-
 Bug fixes
 .........
     - Fixed non-determinism in :class:`dummy.DummyClassifier` with sparse
