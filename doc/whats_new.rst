@@ -319,7 +319,6 @@ Enhancements
 
    - Added :func:`metrics.pairwise.laplacian_kernel`.  By `Clyde Fare <https://github.com/Clyde-fare>`_.
 
-<<<<<<< HEAD
    - :class:`covariance.GraphLasso` allows separate control of the convergence criterion
      for the Elastic-Net subproblem via  the ``enet_tol`` parameter.
 
@@ -344,8 +343,6 @@ Enhancements
    - Added ``algorithm="elkan"`` to :class:`cluster.KMeans` implementing
      Elkan's fast K-Means algorithm. By `Andreas Müller`_.
 
-=======
->>>>>>> removed extra newline
 Bug fixes
 .........
     - Fixed non-determinism in :class:`dummy.DummyClassifier` with sparse
