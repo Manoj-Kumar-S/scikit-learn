@@ -1091,8 +1091,7 @@ class StratifiedShuffleSplit(BaseShuffleSplit):
         rng = check_random_state(self.random_state)
         p_i = class_counts / float(n_samples)
         n_i = np.round(n_train * p_i).astype(int)
-        t_i = np.minimum(class_counts - n_i,
-                         np.round(n_test * p_i).astype(int))
+        t_i = np.round(n_test * p_i).astype(int)
 
         for _ in range(self.n_iter):
             train = []
@@ -1120,9 +1119,6 @@ class StratifiedShuffleSplit(BaseShuffleSplit):
                     train.extend(missing_indices[:n_missing_train])
                 if n_missing_test > 0:
                     test.extend(missing_indices[-n_missing_test:])
-
-            train = rng.permutation(train)
-            test = rng.permutation(test)
 
             yield train, test
 
