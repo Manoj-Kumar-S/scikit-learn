@@ -1787,3 +1787,9 @@ class PairwiseKernel(Kernel):
     def __repr__(self):
         return "{0}(gamma={1}, metric={2})".format(
             self.__class__.__name__, self.gamma, self.metric)
+
+
+class SelectDimensionKernel(Kernel):
+    def __init__(self, base_kernel, active_indices):
+        self.base_kernel = base_kernel
+        self.active_indices = active_indices
