@@ -1787,3 +1787,55 @@ class PairwiseKernel(Kernel):
     def __repr__(self):
         return "{0}(gamma={1}, metric={2})".format(
             self.__class__.__name__, self.gamma, self.metric)
+
+
+class SelectDimensionKernel(Kernel):
+    def __init__(self, kernel, active_dims):
+        self.kernel = kernel
+        if not isinstance(self.kernel, Kernel):
+            raise ValueError("Expected kernel to be a Kernel instance, got "
+                             "%s" % self.kernel)
+        self.active_dims = np.asarray(active_dims)
+        self.active_kernel = clone(kernel)
+        params = self.kernel.get_params()
+
+        if self.active_dims.ndim != 1:
+            raise ValueError("active_dims should be 1-dimensional, got %d"
+                             % self.active_dims.ndim)
+        n_active_dims = self.active_dims.shape[0]
+
+        new_hyperparameters = []
+        for hyperparam in kernel.hyperparameters:
+            n_elements = hyperparam.n_elements
+            if n_elements != 1 and n_elements != n_active_dims:
+                raise ValueError("Expected %d number of elements in "
+                                 "hyperparameter %s of kernel %s, got %d" %
+                                 (n_active_dims, hyperparameter,
+                                  kernel, n_elements))
+            if n_elements == 1:
+                new_hyperparam = hyperparam
+            else:
+                hyperparam_value = getattr(
+                    self.active_kernel, hyperparam.name)
+                setattr(self.active_kernel, hyperparam.name, hyperparam_value)
+                new_hyperparam = hyperparam._replace(
+                    bounds=hyperparam.bounds[self.active_dims])
+
+            new_hyperparameters.append(new_hyperparam)
+        self.hyperparameters_ = new_hyperparameters
+
+    @property
+    def hyperparameters(self):
+        return self.hyperparameters_
+
+    def diag(self, X):
+        return self.active_kernel.diag(X[self.active_dims])
+
+    def is_stationary(self):
+        return self.active_kernel.is_stationary()
+
+    def __call__(self, X, Y=None, eval_gradient=False):
+        if Y is None:
+            return self.active_kernel(X[self.active_dims], X[self.active_dims])
+        else:
+            return self.active_kernel(X[self.active_dims], Y[self.active_dims])
