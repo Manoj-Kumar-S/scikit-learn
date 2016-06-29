@@ -1806,6 +1806,9 @@ class SelectDimensionKernel(Kernel):
 
         new_hyperparameters = []
         for hyperparam in kernel.hyperparameters:
+            name = hyperparam.name
+            value = getattr(self.active_kernel, name)
+
             n_elements = hyperparam.n_elements
             if n_elements != 1 and n_elements != n_active_dims:
                 raise ValueError("Expected %d number of elements in "
@@ -1814,11 +1817,10 @@ class SelectDimensionKernel(Kernel):
                                   kernel, n_elements))
             if n_elements == 1:
                 new_hyperparam = hyperparam
+                setattr(self, name, value)
             else:
-                name = hyperparam.name
-                value = getattr(
-                    self.active_kernel, hyperparam.name)[self.active_dims]
-                setattr(self.active_kernel, name, value)
+                setattr(self.active_kernel, name, value[self.active_dims])
+                setattr(self, name, value[self.active_dims])
                 new_hyperparam = hyperparam._replace(
                     bounds=hyperparam.bounds[self.active_dims],
                     n_elements=n_active_dims)
@@ -1827,7 +1829,7 @@ class SelectDimensionKernel(Kernel):
         self.hyperparameters_ = new_hyperparameters
 
     def get_params(self, deep=True):
-        params = self.get_params(deep=False)
+        params = {'kernel': self.kernel, 'active_dims': self.active_dims}
         if deep:
             params.update(self.kernel.get_params())
         return params
@@ -1847,4 +1849,4 @@ class SelectDimensionKernel(Kernel):
         if Y is not None:
             Y_act = Y[:, self.active_dims]
             return self.active_kernel(X_act, Y_act, eval_gradient)
-        return self.active_kernel(X_act, X_act, eval_gradient)
+        return self.active_kernel(X_act, eval_gradient=eval_gradient)
