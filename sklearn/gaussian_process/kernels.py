@@ -1818,13 +1818,19 @@ class SelectDimensionKernel(Kernel):
                 name = hyperparam.name
                 value = getattr(
                     self.active_kernel, hyperparam.name)[self.active_dims]
-                print(value)
                 setattr(self.active_kernel, name, value)
                 new_hyperparam = hyperparam._replace(
-                    bounds=hyperparam.bounds[self.active_dims])
+                    bounds=hyperparam.bounds[self.active_dims],
+                    n_elements=n_active_dims)
 
             new_hyperparameters.append(new_hyperparam)
         self.hyperparameters_ = new_hyperparameters
+
+    def get_params(self, deep=True):
+        params = self.get_params(deep=False)
+        if deep:
+            params.update(self.kernel.get_params())
+        return params
 
     @property
     def hyperparameters(self):
@@ -1837,8 +1843,8 @@ class SelectDimensionKernel(Kernel):
         return self.active_kernel.is_stationary()
 
     def __call__(self, X, Y=None, eval_gradient=False):
-        X_active = X[:, self.active_dims]
-        if Y is None:
-            return self.active_kernel(X_active, X_active)
-        else:
-            return self.active_kernel(X_active, Y[self.active_dims])
+        X_act = X[:, self.active_dims]
+        if Y is not None:
+            Y_act = Y[:, self.active_dims]
+            return self.active_kernel(X_act, Y_act, eval_gradient)
+        return self.active_kernel(X_act, X_act, eval_gradient)
