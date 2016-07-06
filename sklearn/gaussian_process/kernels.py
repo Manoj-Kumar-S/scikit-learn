@@ -1796,37 +1796,34 @@ class SelectDimensionKernel(Kernel):
             raise ValueError("Expected kernel to be a Kernel instance, got "
                              "%s" % self.kernel)
         self.active_dims = np.asarray(active_dims)
-        self.active_kernel = clone(kernel)
-        params = self.kernel.get_params()
+        self.active_kernel_ = clone(kernel)
 
         if self.active_dims.ndim != 1:
             raise ValueError("active_dims should be 1-dimensional, got %d"
                              % self.active_dims.ndim)
-        n_active_dims = self.active_dims.shape[0]
+        max_dim = np.max(self.active_dims)
+        n_active_dims = len(active_dims)
 
-        new_hyperparameters = []
+        # Modify the clone of the kernel in-place.
         for hyperparam in kernel.hyperparameters:
-            name = hyperparam.name
-            value = getattr(self.active_kernel, name)
-
             n_elements = hyperparam.n_elements
-            if n_elements != 1 and n_elements != n_active_dims:
-                raise ValueError("Expected %d number of elements in "
-                                 "hyperparameter %s of kernel %s, got %d" %
-                                 (n_active_dims, hyperparameter,
-                                  kernel, n_elements))
-            if n_elements == 1:
-                new_hyperparam = hyperparam
-                setattr(self, name, value)
-            else:
-                setattr(self.active_kernel, name, value[self.active_dims])
-                setattr(self, name, value[self.active_dims])
+            if n_elements > 1 and n_elements < max_dim + 1:
+                raise ValueError("Expected number of elements in "
+                                 "hyperparameter %s to be < than %d, got %d"
+                                 (hyperparam, max_dim + 1, n_elements))
+            if n_elements > 1:
+                name = hyperparam.name
+
+                # Modify hyperparam.
                 new_hyperparam = hyperparam._replace(
                     bounds=hyperparam.bounds[self.active_dims],
                     n_elements=n_active_dims)
+                setattr(self.active_kernel_, "hyperparameter_" + name,
+                        new_hyperparam)
 
-            new_hyperparameters.append(new_hyperparam)
-        self.hyperparameters_ = new_hyperparameters
+                # Modify the value of the hyperparam.
+                value = getattr(self.active_kernel_, name)
+                setattr(self.active_kernel_, name, value[self.active_dims])
 
     def get_params(self, deep=True):
         params = {'kernel': self.kernel, 'active_dims': self.active_dims}
@@ -1836,7 +1833,7 @@ class SelectDimensionKernel(Kernel):
 
     @property
     def hyperparameters(self):
-        return self.hyperparameters_
+        return self.active_kernel_.hyperparameters
 
     def diag(self, X):
         return self.active_kernel.diag(X[self.active_dims])
