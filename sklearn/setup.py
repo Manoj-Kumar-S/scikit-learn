@@ -63,12 +63,12 @@ def configuration(parent_package='', top_path=None):
     )
 
     # some libs needs cblas, fortran-compiled BLAS will not be sufficient
-    blas_info = get_info('blas_opt', 0)
-    if (not blas_info) or (
-            ('NO_ATLAS_INFO', 1) in blas_info.get('define_macros', [])):
-        config.add_library('cblas',
-                           sources=[join('src', 'cblas', '*.c')])
-        warnings.warn(BlasNotFoundError.__doc__)
+    # blas_info = get_info('blas_opt', 0)
+    # if (not blas_info) or (
+    #         ('NO_ATLAS_INFO', 1) in blas_info.get('define_macros', [])):
+    config.add_library('cblas',
+                       sources=[join('src', 'cblas', '*.c')])
+        # warnings.warn(BlasNotFoundError.__doc__)
 
     # the following packages depend on cblas, so they have to be build
     # after the above.

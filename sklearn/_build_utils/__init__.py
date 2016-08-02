@@ -32,4 +32,5 @@ def get_blas_info():
     else:
         cblas_libs = blas_info.pop('libraries', [])
 
+    blas_info.pop('include_dirs', [])
     return cblas_libs, blas_info

@@ -29,11 +29,11 @@ from ..exceptions import ConvergenceWarning
 from . import cd_fast
 import struct
 
-if (struct.calcsize("P") * 8 == 64
-    and int(np.__version__.split('.')[1]) >= 10):
-    VALID_FOR_32_INPUT = True
-else:
-    VALID_FOR_32_INPUT = False
+# if (struct.calcsize("P") * 8 == 64
+#     and int(np.__version__.split('.')[1]) >= 10):
+VALID_FOR_32_INPUT = True
+# else:
+#     VALID_FOR_32_INPUT = False
 
 
 ###############################################################################
