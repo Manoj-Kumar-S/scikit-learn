@@ -424,7 +424,7 @@ cdef class BestSplitter(BaseDenseSplitter):
                     p = start
                     feature_idx_offset = self.X_idx_sorted_stride * current.feature
 
-                    for i in range(self.n_total_samples): 
+                    for i in range(self.n_total_samples):
                         j = X_idx_sorted[i + feature_idx_offset]
                         if sample_mask[j] == 1:
                             samples[p] = j
@@ -861,6 +861,17 @@ cdef class RandomSplitter(BaseDenseSplitter):
         split[0] = best
         n_constant_features[0] = n_total_constants
         return 0
+
+
+cdef class MondrianSplitter(RandomSplitter):
+    """Splitter for finding the best random split."""
+    def __reduce__(self):
+        return (MondrianSplitter, (self.criterion,
+                                 self.max_features,
+                                 self.min_samples_leaf,
+                                 self.min_weight_leaf,
+                                 self.random_state,
+                                 self.presort), self.__getstate__())
 
 
 cdef class BaseSparseSplitter(Splitter):

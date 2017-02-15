@@ -61,7 +61,9 @@ CRITERIA_REG = {"mse": _criterion.MSE, "friedman_mse": _criterion.FriedmanMSE,
                 "mae": _criterion.MAE}
 
 DENSE_SPLITTERS = {"best": _splitter.BestSplitter,
-                   "random": _splitter.RandomSplitter}
+                   "random": _splitter.RandomSplitter,
+                   "mondrian": _splitter.MondrianSplitter}
+
 
 SPARSE_SPLITTERS = {"best": _splitter.BestSparseSplitter,
                     "random": _splitter.RandomSparseSplitter}
@@ -107,7 +109,6 @@ class BaseDecisionTree(six.with_metaclass(ABCMeta, BaseEstimator)):
 
     def fit(self, X, y, sample_weight=None, check_input=True,
             X_idx_sorted=None):
-
         random_state = check_random_state(self.random_state)
         if check_input:
             X = check_array(X, dtype=DTYPE, accept_sparse="csc")
@@ -1125,7 +1126,7 @@ class MondrianTreeRegressor(DecisionTreeRegressor):
     """
     def __init__(self,
                  criterion="mse",
-                 splitter="random",
+                 splitter="mondrian",
                  max_depth=None,
                  min_samples_split=2,
                  min_samples_leaf=1,
