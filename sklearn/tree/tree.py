@@ -1118,3 +1118,30 @@ class ExtraTreeRegressor(DecisionTreeRegressor):
             max_leaf_nodes=max_leaf_nodes,
             min_impurity_split=min_impurity_split,
             random_state=random_state)
+
+class MondrianTreeRegressor(DecisionTreeRegressor):
+    """
+    TODO: Document stuff.
+    """
+    def __init__(self,
+                 criterion="mse",
+                 splitter="random",
+                 max_depth=None,
+                 min_samples_split=2,
+                 min_samples_leaf=1,
+                 min_weight_fraction_leaf=0.,
+                 max_features="auto",
+                 random_state=None,
+                 min_impurity_split=1e-7,
+                 max_leaf_nodes=None):
+        super(MondrianTreeRegressor, self).__init__(
+            criterion=criterion,
+            splitter=splitter,
+            max_depth=max_depth,
+            min_samples_split=min_samples_split,
+            min_samples_leaf=min_samples_leaf,
+            min_weight_fraction_leaf=min_weight_fraction_leaf,
+            max_features=max_features,
+            max_leaf_nodes=max_leaf_nodes,
+            min_impurity_split=min_impurity_split,
+            random_state=random_state)
