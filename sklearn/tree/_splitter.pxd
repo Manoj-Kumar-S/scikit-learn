@@ -30,6 +30,8 @@ cdef struct SplitRecord:
     double improvement     # Impurity improvement given parent node.
     double impurity_left   # Impurity of the left split.
     double impurity_right  # Impurity of the right split.
+    double E               # Time of split.
+
 
 cdef class Splitter:
     # The splitter searches in the input space for a feature and a threshold
@@ -91,7 +93,7 @@ cdef class Splitter:
     cdef int node_split(self,
                         double impurity,   # Impurity of the node
                         SplitRecord* split,
-                        SIZE_t* n_constant_features) nogil except -1
+                        SIZE_t* n_constant_features) except -1
 
     cdef void node_value(self, double* dest) nogil
 

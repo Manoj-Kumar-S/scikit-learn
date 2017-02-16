@@ -193,77 +193,78 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
         cdef Stack stack = Stack(INITIAL_STACK_SIZE)
         cdef StackRecord stack_record
 
-        with nogil:
-            # push root node onto stack
-            rc = stack.push(0, n_node_samples, 0, _TREE_UNDEFINED, 0, INFINITY, 0)
-            if rc == -1:
-                # got return code -1 - out-of-memory
-                with gil:
-                    raise MemoryError()
+        # with nogil:
+        # push root node onto stack
+        rc = stack.push(0, n_node_samples, 0, _TREE_UNDEFINED, 0, INFINITY, 0)
+        if rc == -1:
+            raise MemoryError()
+            # got return code -1 - out-of-memory
+            # with gil:
+            #     raise MemoryError()
 
-            while not stack.is_empty():
-                stack.pop(&stack_record)
+        while not stack.is_empty():
+            stack.pop(&stack_record)
 
-                start = stack_record.start
-                end = stack_record.end
-                depth = stack_record.depth
-                parent = stack_record.parent
-                is_left = stack_record.is_left
-                impurity = stack_record.impurity
-                n_constant_features = stack_record.n_constant_features
+            start = stack_record.start
+            end = stack_record.end
+            depth = stack_record.depth
+            parent = stack_record.parent
+            is_left = stack_record.is_left
+            impurity = stack_record.impurity
+            n_constant_features = stack_record.n_constant_features
 
-                n_node_samples = end - start
-                splitter.node_reset(start, end, &weighted_n_node_samples)
+            n_node_samples = end - start
+            splitter.node_reset(start, end, &weighted_n_node_samples)
 
-                is_leaf = (depth >= max_depth or
-                           n_node_samples < min_samples_split or
-                           n_node_samples < 2 * min_samples_leaf or
-                           weighted_n_node_samples < 2 * min_weight_leaf)
+            is_leaf = (depth >= max_depth or
+                       n_node_samples < min_samples_split or
+                       n_node_samples < 2 * min_samples_leaf or
+                       weighted_n_node_samples < 2 * min_weight_leaf)
 
-                if first:
-                    impurity = splitter.node_impurity()
-                    first = 0
+            if first:
+                impurity = splitter.node_impurity()
+                first = 0
 
-                is_leaf = (is_leaf or
-                           (impurity <= min_impurity_split))
+            is_leaf = (is_leaf or
+                       (impurity <= min_impurity_split))
 
-                if not is_leaf:
-                    splitter.node_split(impurity, &split, &n_constant_features)
-                    is_leaf = is_leaf or (split.pos >= end)
+            if not is_leaf:
+                splitter.node_split(impurity, &split, &n_constant_features)
+                is_leaf = is_leaf or (split.pos >= end)
 
-                node_id = tree._add_node(parent, is_left, is_leaf, split.feature,
-                                         split.threshold, impurity, n_node_samples,
-                                         weighted_n_node_samples)
+            node_id = tree._add_node(parent, is_left, is_leaf, split.feature,
+                                     split.threshold, impurity, n_node_samples,
+                                     weighted_n_node_samples)
 
-                if node_id == <SIZE_t>(-1):
-                    rc = -1
+            if node_id == <SIZE_t>(-1):
+                rc = -1
+                break
+
+            # Store value for all nodes, to facilitate tree/model
+            # inspection and interpretation
+            splitter.node_value(tree.value + node_id * tree.value_stride)
+
+            if not is_leaf:
+                # Push right child on stack
+                rc = stack.push(split.pos, end, depth + 1, node_id, 0,
+                                split.impurity_right, n_constant_features)
+                if rc == -1:
                     break
 
-                # Store value for all nodes, to facilitate tree/model
-                # inspection and interpretation
-                splitter.node_value(tree.value + node_id * tree.value_stride)
+                # Push left child on stack
+                rc = stack.push(start, split.pos, depth + 1, node_id, 1,
+                                split.impurity_left, n_constant_features)
+                if rc == -1:
+                    break
 
-                if not is_leaf:
-                    # Push right child on stack
-                    rc = stack.push(split.pos, end, depth + 1, node_id, 0,
-                                    split.impurity_right, n_constant_features)
-                    if rc == -1:
-                        break
+            if depth > max_depth_seen:
+                max_depth_seen = depth
 
-                    # Push left child on stack
-                    rc = stack.push(start, split.pos, depth + 1, node_id, 1,
-                                    split.impurity_left, n_constant_features)
-                    if rc == -1:
-                        break
+        if rc >= 0:
+            rc = tree._resize_c(tree.node_count)
 
-                if depth > max_depth_seen:
-                    max_depth_seen = depth
-
-            if rc >= 0:
-                rc = tree._resize_c(tree.node_count)
-
-            if rc >= 0:
-                tree.max_depth = max_depth_seen
+        if rc >= 0:
+            tree.max_depth = max_depth_seen
         if rc == -1:
             raise MemoryError()
 
@@ -445,7 +446,8 @@ cdef class BestFirstTreeBuilder(TreeBuilder):
                    impurity <= min_impurity_split)
 
         if not is_leaf:
-            splitter.node_split(impurity, &split, &n_constant_features)
+            with gil:
+                splitter.node_split(impurity, &split, &n_constant_features)
             is_leaf = is_leaf or (split.pos >= end)
 
         node_id = tree._add_node(parent - tree.nodes
