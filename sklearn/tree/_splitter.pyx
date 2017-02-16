@@ -17,6 +17,7 @@
 
 from ._criterion cimport Criterion
 
+from libc.math cimport log as ln
 from libc.stdlib cimport free
 from libc.stdlib cimport qsort
 from libc.string cimport memcpy
@@ -915,22 +916,53 @@ cdef class MondrianSplitter(RandomSplitter):
         cdef DTYPE_t max_feature_value
         cdef DTYPE_t current_feature_value
         cdef SIZE_t partition_end
+        cdef DTYPE_t* lower_bounds = NULL
+        cdef DTYPE_t* upper_bounds = NULL
+        cdef DTYPE_t* cum_bounds_diff = NULL
+
+        safe_realloc(&lower_bounds, n_features)
+        safe_realloc(&upper_bounds, n_features)
+        safe_realloc(&cum_bounds_diff, n_features)
+
         cdef double rate = 0.0
 
         _init_split(&best, end)
-        for f in range(n_features):
+        for f_ind in range(n_features):
             max_feature_value = -INFINITY
             min_feature_value = INFINITY
             for j in range(start, end):
                 sample_ind = samples[j]
-                f_val = X[sample_ind * X_sample_stride + f * X_feature_stride]
+                f_val = X[sample_ind*X_sample_stride + f_ind*X_feature_stride]
 
                 if f_val < min_feature_value:
                     min_feature_value = f_val
                 if f_val > max_feature_value:
                     max_feature_value = f_val
+            lower_bounds[f_ind] = min_feature_value
+            upper_bounds[f_ind] = max_feature_value
+            cum_bounds_diff[f_ind] = max_feature_value - min_feature_value
+
+            if f_ind != 0:
+                cum_bounds_diff[f_ind] += cum_bounds_diff[f_ind - 1]
             rate += (max_feature_value - min_feature_value)
-        split.E = rate
+
+        # Generate E from exp(rate) ~ -1.0 / rate * U(0, 1)
+        split.E = -1.0 / rate * ln(1 - rand_uniform(0, 1, random_state))
+
+        # Generate split dimension with probability proportional to (u_d - l_d)
+        search = rand_uniform(0, cum_bounds_diff[n_features - 1], random_state)
+        for f_ind in range(n_features):
+            if search < cum_bounds_diff[f_ind]:
+                split.feature = f_ind
+                break
+
+        # Generate the split threshold uniformly between the lower bounds and
+        # upper bounds.
+        split.threshold = rand_uniform(
+            lower_bounds[split.feature],
+            upper_bounds[split.feature], random_state)
+        print(split.threshold)
+        print(split.feature)
 
         # Sample up to max_features without replacement using a
         # Fisher-Yates-based algorithm (using the local variables `f_i` and
